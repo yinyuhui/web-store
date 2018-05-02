@@ -22,6 +22,9 @@ app.use(router)
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
+// 用于显示 favicon.ico
+// let path = require('path')
+
 const devWebpackConfig = merge(baseWebpackConfig, {
     module: {
         rules: utils.styleLoaders({ sourceMap: config.dev.cssSourceMap, usePostCSS: true })
@@ -62,7 +65,10 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         new HtmlWebpackPlugin({
             filename: 'index.html',
             template: 'index.html',
-            inject: true
+            inject: true,
+
+            // 用于显示 favicon.ico
+            favicon: path.resolve('./favicon.ico')
         }),
         // copy custom static assets
         new CopyWebpackPlugin([{
