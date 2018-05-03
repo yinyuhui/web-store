@@ -3,9 +3,9 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import VueLazyload from 'vue-lazyload'
+import VueLazyLoad from 'vue-lazyload'
 
-Vue.use(VueLazyload, {
+Vue.use(VueLazyLoad, {
     loading: '/static/loading-svg/loading-bars.svg'
 })
 
