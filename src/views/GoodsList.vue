@@ -1,3 +1,11 @@
+<style scoped>
+  .load-more{
+    text-align: center;
+    height: 20px;
+    line-height: 20px;
+  }
+</style>
+
 <template>
     <div>
       <nav-header></nav-header>
@@ -7,9 +15,14 @@
       <div class="accessory-result-page accessory-page">
         <div class="container">
           <div class="filter-nav">
-            <span class="sortby">排序方式：</span>
-            <a href="javascript:void(0)" class="default cur">默认排序</a>
-            <a href="javascript:void(0)" class="price">价格 ↓ <svg class="icon icon-arrow-short"><use xlink:href="#icon-arrow-short"></use></svg></a>
+            <!-- <span class="sortby">排序方式：</span> -->
+            <a href="javascript:void(0)" class="default" :class="{'cur': defaultFlag}" @click="defaultSort">综合排序</a>
+            <a href="javascript:void(0)" class="price" :class="{'cur': !defaultFlag}" @click="sortGoods">
+              价格 <span v-if="sortFlag">↑</span><span v-else>↓</span>
+              <svg class="icon icon-arrow-short">
+                <use xlink:href="#icon-arrow-short"></use>
+              </svg>
+            </a>
             <a href="javascript:void(0)" class="filterby stopPop" @click="showFilterPop">筛选</a>
           </div>
           <div class="accessory-result">
@@ -30,20 +43,22 @@
             <div class="accessory-list-wrap">
               <div class="accessory-list col-4">
                 <ul>
-
                   <li v-for="item in goodsList" :key="item.productId">
                     <div class="pic">
                       <a href="#"><img v-lazy="'static/'+item.productImage" alt=""></a>
                     </div>
                     <div class="main">
                       <div class="name">{{item.productName}}</div>
-                      <div class="price">{{item.prodcutPrice}}</div>
+                      <div class="price">{{item.salePrice}}</div>
                       <div class="btn-area">
                         <a href="javascript:;" class="btn btn--m">加入购物车</a>
                       </div>
                     </div>
                   </li>
                 </ul>
+                <div class='load-more' v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
+                  加载中...
+                </div>
               </div>
             </div>
           </div>
@@ -66,7 +81,9 @@ import axios from 'axios'
         data() {
             return {
               goodsList: [],
-              priceFilter: [
+
+              // 价格区间
+              priceFilter: [  
                 {
                   id: '0',
                   startPrice: '0.00',
@@ -85,9 +102,19 @@ import axios from 'axios'
                   endPrice: '2000.00'
                 }
               ],
-              priceChecked: 'all',
-              filterBy: false,
-              overLayFlag: false
+
+              priceChecked: 'all',   // 价格筛选字段
+              filterBy: false,       // 盘
+              overLayFlag: false,
+              sortFlag: true,
+              // page: 1,
+              // pageSize: 8,
+              params: {
+                page: 1,
+                pageSize: 8,
+              },
+              defaultFlag: true,
+              busy: true
             }
         },
         components: {
@@ -101,10 +128,57 @@ import axios from 'axios'
         methods: {
 
           // 获得商品列表信息
-          getGoodsList() {
-            axios.get('/goods').then(res=>{
-              this.goodsList = res.data.status === '0' ?  res.data.result.list : []
+          getGoodsList(flag) {            
+            axios.get('/goods', {params: this.params}).then(res=>{
+              if(res.data.status === '0'){
+                if(flag) {
+                  this.goodsList = this.goodsList.concat(res.data.result.list)
+                  this.busy = res.data.result.count === 0 ? true : false
+                  
+                  // if(res.data.result.count === 0) {
+                  //   this.busy = true
+                  // }
+                  // else {
+                  //   this.busy = false
+                  // }
+
+                }
+                else {
+                  this.goodsList = res.data.result.list
+                  this.busy = false
+                }
+              }
+              else {
+                this.goodsList = []
+              }
             })
+          },
+
+          sortGoods() {
+            this.defaultFlag = false
+            this.sortFlag = !this.sortFlag
+            this.params.page = 1
+            this.params.sort = this.sortFlag ? 1 : -1
+            this.getGoodsList()
+          },
+
+          defaultSort(){
+            this.defaultFlag = true
+            this.params = {
+              page: 1,
+              pageSize: 8,
+            }
+            this.getGoodsList()
+            this.sortFlag = true
+          },
+
+          loadMore(){
+            this.busy = true
+            setTimeout(() => {
+              this.params.page++
+              this.getGoodsList(true)
+              this.busy = false
+            }, 500);
           },
 
           // 较窄时点击显示价格 filer 选项
