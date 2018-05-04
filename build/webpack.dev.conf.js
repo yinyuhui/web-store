@@ -10,14 +10,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 
-const express = require('express')
-const app = express()
-var goodsData = require('./../mock/goods.json')
-var router = express.Router()
-router.get("http://localhost:8080/static/goods.json", function(req, res, next) {
-    res.json(goodsData)
-})
-app.use(router)
+// const express = require('express')
+// const app = express()
+// var goodsData = require('./../mock/goods.json')
+// var router = express.Router()
+// router.get("http://localhost:8080/static/goods.json", function(req, res, next) {
+//     res.json(goodsData)
+// })
+// app.use(router)
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)

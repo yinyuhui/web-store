@@ -33,7 +33,7 @@
 
                   <li v-for="item in goodsList" :key="item.productId">
                     <div class="pic">
-                      <a href="#"><img v-lazy="'static/'+item.prodcutImg" alt=""></a>
+                      <a href="#"><img v-lazy="'static/'+item.productImage" alt=""></a>
                     </div>
                     <div class="main">
                       <div class="name">{{item.productName}}</div>
@@ -102,9 +102,8 @@ import axios from 'axios'
 
           // 获得商品列表信息
           getGoodsList() {
-            axios.get('http://localhost:8080/static/goods.json').then(res=>{
-              let data = res.data;
-              this.goodsList = data.result
+            axios.get('/goods').then(res=>{
+              this.goodsList = res.data.status === '0' ?  res.data.result.list : []
             })
           },
 
