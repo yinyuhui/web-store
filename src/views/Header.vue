@@ -71,7 +71,18 @@ import axios from 'axios'
         name:''
       }
     },
-    methods:{
+    mounted() {
+      this.checkLogin()
+    },
+    methods: {
+      // 验证一小时内是否登录了
+      checkLogin() {
+        axios.get('/users/checkLogin').then((res) => {
+          if(res.data.status === '0'){
+            this.name = res.data.result
+          }
+        })
+      },
 
       // 登录
       login(){

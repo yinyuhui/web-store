@@ -138,7 +138,7 @@ import axios from 'axios'
           getGoodsList(flag) {    
             this.loading = true  
             this.noMore = false      
-            axios.get('/goods', {params: this.params}).then(res=>{
+            axios.get('/goods/list', {params: this.params}).then(res=>{
               this.loading = false
               if(res.data.status === '0'){
                 if(flag) {
