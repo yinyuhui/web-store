@@ -1,8 +1,10 @@
 <style scoped>
   .load-more{
     text-align: center;
-    height: 20px;
-    line-height: 20px;
+    height: 32px;
+    line-height: 32px;
+    font-size: 12px;
+    color: #cccccc
   }
 </style>
 
@@ -58,6 +60,7 @@
                 </ul>
                 <div class='load-more' v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
                   <img src="../../static/loading-svg/loading-spinning-bubbles.svg" alt="loading"  v-show='loading'>
+                  <p v-if='noMore'>别滑了，没有啦~</p>
                 </div>
               </div>
             </div>
@@ -117,7 +120,8 @@ import axios from 'axios'
               },
               defaultFlag: true,
               busy: false,
-              loading: false
+              loading: false,
+              noMore: false
             }
         },
         components: {
@@ -132,13 +136,15 @@ import axios from 'axios'
 
           // 获得商品列表信息
           getGoodsList(flag) {    
-            this.loading = true        
+            this.loading = true  
+            this.noMore = false      
             axios.get('/goods', {params: this.params}).then(res=>{
               this.loading = false
               if(res.data.status === '0'){
                 if(flag) {
                   this.goodsList = this.goodsList.concat(res.data.result.list)
                   this.busy = res.data.result.count === 0 ? true : false
+                  this.noMore = res.data.result.count === 0 ? true : false
                 }
                 else {
                   this.goodsList = res.data.result.list
