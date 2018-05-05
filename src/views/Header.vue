@@ -1,3 +1,14 @@
+<style scoped>
+.errorTip{
+  color:#f56c6c;
+  margin-bottom: 8px;
+}
+.elinput{
+  margin-bottom: 22px;
+}
+</style>
+
+
 <template>
     <header class="header">
         <symbol id="icon-cart" viewBox="0 0 38 32">
@@ -16,9 +27,9 @@
           <div class="navbar-right-container" style="display: flex;">
             <div class="navbar-menu-container">
               <!--<a href="/" class="navbar-link">我的账户</a>-->
-              <span class="navbar-link"></span>
-              <a href="javascript:void(0)" class="navbar-link" @click="login">登录</a>
-              <a href="javascript:void(0)" class="navbar-link" @click="logout">退出</a>
+              <span class="navbar-link" v-if="name">{{name}}</span>
+              <a href="javascript:void(0)" class="navbar-link" @click="login" v-if="!name">登录</a>
+              <a href="javascript:void(0)" class="navbar-link" @click="logout" v-if="name">退出</a>
               <div class="navbar-cart-container">
                 <span class="navbar-cart-count"></span>
                 <a class="navbar-link navbar-cart-link" href="/#/cart">
@@ -28,20 +39,17 @@
                 </a>
               </div>
             </div>
-            <el-dialog title="登录" :visible.sync='dialogFormVisible' width="260px">
-              <el-form :model="form">
-                <!-- <el-form-item label="用户名" label-width="120px"> -->
-                <el-form-item>
-                  <el-input v-model="form.userName" auto-complete="off"></el-input>
-                </el-form-item>
-                <!-- <el-form-item label="密码" label-width="120px"> -->
-                <el-form-item>
-                  <el-input v-model="form.userPwd" auto-complete="off"></el-input>
-                </el-form-item>
-              </el-form>
+            <el-dialog title="登录" :visible.sync='dialogFormVisible' width="320px">
+              <div class="errorTip" v-show="errorTip">
+                <p><i class="el-icon-error"> </i> 用户名密码为空或错误</p>
+              </div>
+                  <el-input v-model="userName" auto-complete="off" class="elinput" placeholder="请输入用户名" prefix-icon="el-icon-edit">
+                  </el-input>
+                  <el-input v-model="userPwd" auto-complete="off"  class="elinput" placeholder="请输入密码" prefix-icon="el-icon-edit">
+                  </el-input>
               <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                <el-button @click="onCancel">取 消</el-button>
+                <el-button type="primary" @click="onSubmit">确 定</el-button>
               </div>
             </el-dialog>
           </div>
@@ -49,23 +57,56 @@
       </header>
 </template>
 <script>
+import axios from 'axios'
   export default{
     data(){
       return{
         form: {
-          userName: 'aaa',
-          userPwd: 'aa'
+          
         },
-        dialogFormVisible: false
+        userName: 'user01',
+        userPwd: '',
+        dialogFormVisible: false,
+        errorTip: false,
+        name:''
       }
     },
     methods:{
+
+      // 登录
       login(){
+        this.errorTip = false
         this.dialogFormVisible = true
       },
 
+      // 登出
       logout(){
 
+      },
+
+      // 登录取消按钮
+      onCancel(){
+        this.dialogFormVisible = false
+      },
+      
+      // 登录确认按钮
+      onSubmit(){
+        if(!this.userName || !this.userPwd){
+          this.errorTip = true
+          return
+        }
+        axios.post('/users/login', {
+          userName: this.userName,
+          userPwd: this.userPwd
+        }).then((res) => {
+          if(res.data.status === '0') {
+            this.name = res.data.result.userName
+            this.dialogFormVisible = false
+            this.errorTip = false
+          } else {
+            this.errorTip = true
+          }
+        })
       }
     }
   }
