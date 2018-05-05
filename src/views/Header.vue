@@ -17,8 +17,8 @@
             <div class="navbar-menu-container">
               <!--<a href="/" class="navbar-link">我的账户</a>-->
               <span class="navbar-link"></span>
-              <a href="javascript:void(0)" class="navbar-link">登录</a>
-              <a href="javascript:void(0)" class="navbar-link">退出</a>
+              <a href="javascript:void(0)" class="navbar-link" @click="login">登录</a>
+              <a href="javascript:void(0)" class="navbar-link" @click="logout">退出</a>
               <div class="navbar-cart-container">
                 <span class="navbar-cart-count"></span>
                 <a class="navbar-link navbar-cart-link" href="/#/cart">
@@ -28,7 +28,45 @@
                 </a>
               </div>
             </div>
+            <el-dialog title="登录" :visible.sync='dialogFormVisible' width="260px">
+              <el-form :model="form">
+                <!-- <el-form-item label="用户名" label-width="120px"> -->
+                <el-form-item>
+                  <el-input v-model="form.userName" auto-complete="off"></el-input>
+                </el-form-item>
+                <!-- <el-form-item label="密码" label-width="120px"> -->
+                <el-form-item>
+                  <el-input v-model="form.userPwd" auto-complete="off"></el-input>
+                </el-form-item>
+              </el-form>
+              <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+              </div>
+            </el-dialog>
           </div>
         </div>
       </header>
 </template>
+<script>
+  export default{
+    data(){
+      return{
+        form: {
+          userName: 'aaa',
+          userPwd: 'aa'
+        },
+        dialogFormVisible: false
+      }
+    },
+    methods:{
+      login(){
+        this.dialogFormVisible = true
+      },
+
+      logout(){
+
+      }
+    }
+  }
+</script>
