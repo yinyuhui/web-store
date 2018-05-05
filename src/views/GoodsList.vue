@@ -43,7 +43,7 @@
             <div class="accessory-list-wrap">
               <div class="accessory-list col-4">
                 <ul>
-                  <li v-for="item in goodsList" :key="item._id">
+                  <li v-for="item in goodsList" :key="item.productId">
                     <div class="pic">
                       <a href="#"><img v-lazy="'static/'+item.productImage" alt=""></a>
                     </div>
@@ -51,7 +51,7 @@
                       <div class="name">{{item.productName}}</div>
                       <div class="price">{{item.salePrice}}</div>
                       <div class="btn-area">
-                        <a href="javascript:;" class="btn btn--m">加入购物车</a>
+                        <a href="javascript:;" class="btn btn--m" @click="addCart(item.productId)">加入购物车</a>
                       </div>
                     </div>
                   </li>
@@ -152,7 +152,19 @@ import axios from 'axios'
             // console.log( this.busy)
           },
 
-         
+          // 加入购物车
+          addCart(productId){
+            axios.post('/goods/addCart',{
+              productId: productId
+            }).then((res) => {
+              if(res.status === 0){
+                console.log('')
+              }
+              else{
+                console.log()
+              }
+            })
+          },
 
           // 排序
           sortGoods() {
