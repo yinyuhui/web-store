@@ -198,6 +198,7 @@ import axios from 'axios'
 
           // 价格区间筛选
           setPriceFilter(index){
+            this.priceChecked = index
             this.params.priceLevel = index
             this.params.page = 1 
             this.getGoodsList()
