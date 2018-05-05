@@ -43,7 +43,7 @@
             <div class="accessory-list-wrap">
               <div class="accessory-list col-4">
                 <ul>
-                  <li v-for="item in goodsList" :key="item.productId">
+                  <li v-for="item in goodsList" :key="item._id">
                     <div class="pic">
                       <a href="#"><img v-lazy="'static/'+item.productImage" alt=""></a>
                     </div>
@@ -57,7 +57,7 @@
                   </li>
                 </ul>
                 <div class='load-more' v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="30">
-                  加载中...
+                  <img src="../../static/loading-svg/loading-spinning-bubbles.svg" alt="loading"  v-show='loading'>
                 </div>
               </div>
             </div>
@@ -100,21 +100,24 @@ import axios from 'axios'
                   id: '3',
                   startPrice: '1000.00',
                   endPrice: '2000.00'
+                },{
+                  id: '4',
+                  startPrice: '2000.00',
+                  endPrice: '5000.00'
                 }
               ],
 
               priceChecked: 'all',   // 价格筛选字段
-              filterBy: false,       // 盘
+              filterBy: false,       // 
               overLayFlag: false,
               sortFlag: true,
-              // page: 1,
-              // pageSize: 8,
               params: {
                 page: 1,
                 pageSize: 8,
               },
               defaultFlag: true,
-              busy: true
+              busy: false,
+              loading: false
             }
         },
         components: {
@@ -128,20 +131,14 @@ import axios from 'axios'
         methods: {
 
           // 获得商品列表信息
-          getGoodsList(flag) {            
+          getGoodsList(flag) {    
+            this.loading = true        
             axios.get('/goods', {params: this.params}).then(res=>{
+              this.loading = false
               if(res.data.status === '0'){
                 if(flag) {
                   this.goodsList = this.goodsList.concat(res.data.result.list)
                   this.busy = res.data.result.count === 0 ? true : false
-                  
-                  // if(res.data.result.count === 0) {
-                  //   this.busy = true
-                  // }
-                  // else {
-                  //   this.busy = false
-                  // }
-
                 }
                 else {
                   this.goodsList = res.data.result.list
@@ -152,8 +149,12 @@ import axios from 'axios'
                 this.goodsList = []
               }
             })
+            // console.log( this.busy)
           },
 
+         
+
+          // 排序
           sortGoods() {
             this.defaultFlag = false
             this.sortFlag = !this.sortFlag
@@ -162,6 +163,7 @@ import axios from 'axios'
             this.getGoodsList()
           },
 
+          // 默认排序
           defaultSort(){
             this.defaultFlag = true
             this.params = {
@@ -172,13 +174,22 @@ import axios from 'axios'
             this.sortFlag = true
           },
 
+          // 加载更多  懒加载时调用
           loadMore(){
             this.busy = true
             setTimeout(() => {
               this.params.page++
               this.getGoodsList(true)
-              this.busy = false
+              // this.busy = false     
             }, 500);
+          },
+
+          // 价格区间筛选
+          setPriceFilter(index){
+            this.params.priceLevel = index
+            this.params.page = 1 
+            this.getGoodsList()
+            this.closePop()
           },
 
           // 较窄时点击显示价格 filer 选项
@@ -192,12 +203,6 @@ import axios from 'axios'
             this.filterBy = false,
             this.overLayFlag = false
           },
-
-          // 点击价格 filter 某一项时的操作
-          setPriceFilter(id){
-            this.priceChecked = id
-            this.closePop()
-          }
         }
     }
 </script>
