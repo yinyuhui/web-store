@@ -47,7 +47,7 @@
               </div>
                   <el-input v-model="userName" auto-complete="off" class="elinput" placeholder="请输入用户名" prefix-icon="el-icon-edit">
                   </el-input>
-                  <el-input v-model="userPwd" auto-complete="off"  class="elinput" placeholder="请输入密码" prefix-icon="el-icon-edit">
+                  <el-input v-model="userPwd" auto-complete="off"  class="elinput" placeholder="请输入密码" prefix-icon="el-icon-edit" @keyup.enter.native="onSubmit">
                   </el-input>
               <div slot="footer" class="dialog-footer">
                 <el-button @click="onCancel">取 消</el-button>
