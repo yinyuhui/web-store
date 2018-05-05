@@ -39,7 +39,9 @@
                 </a>
               </div>
             </div>
-            <el-dialog title="登录" :visible.sync='dialogFormVisible' width="320px">
+
+            <!-- 登录弹窗 -->
+            <el-dialog title="登录" :visible.sync='dialogFormVisible' width="300px">
               <div class="errorTip" v-show="errorTip">
                 <p><i class="el-icon-error"> </i> 用户名/密码为空或错误</p>
               </div>
@@ -52,6 +54,7 @@
                 <el-button type="primary" @click="onSubmit">确 定</el-button>
               </div>
             </el-dialog>
+          
           </div>
         </div>
       </header>
@@ -75,6 +78,7 @@ import axios from 'axios'
       this.checkLogin()
     },
     methods: {
+
       // 验证一小时内是否登录了
       checkLogin() {
         axios.get('/users/checkLogin').then((res) => {

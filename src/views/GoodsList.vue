@@ -68,6 +68,33 @@
         </div>
       </div>
       <div class="md-overlay" v-show="overLayFlag" @click="closePop"></div>
+
+      <!-- 未登录添加购物车的弹窗 -->
+      <el-dialog
+        title="请先登录"
+        :visible.sync="needLogin"
+        width="320px"
+        :before-close="handleClose">
+        <span>当前未登录，请先登录再加入购物车！</span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="needLogin = false">取 消</el-button>
+          <el-button type="primary" @click="needLogin = false">确 定</el-button>
+        </span>
+      </el-dialog>
+
+      <!-- 登录添加购物车的弹窗 -->
+      <el-dialog
+        title="添加成功"
+        :visible.sync="addSuc"
+        width="320px"
+        :before-close="handleClose">
+        <span>宝贝已经添加到购物车中啦，现在你想要？</span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="addSuc = false">继续购物</el-button>
+          <el-button type="primary" @click="goCart">去购物车</el-button>
+        </span>
+      </el-dialog>
+
       <nav-footer></nav-footer>
     </div>
 </template>
@@ -83,6 +110,7 @@ import axios from 'axios'
     export default{
         data() {
             return {
+                           
               goodsList: [],
 
               // 价格区间
@@ -121,7 +149,9 @@ import axios from 'axios'
               defaultFlag: true,
               busy: false,
               loading: false,
-              noMore: false
+              noMore: false,
+              needLogin: false,              
+              addSuc: false,
             }
         },
         components: {
@@ -163,11 +193,12 @@ import axios from 'axios'
             axios.post('/goods/addCart',{
               productId: productId
             }).then((res) => {
-              if(res.status === 0){
-                console.log('')
+              // console.log(res)
+              if(res.data.status === '0'){
+                this.addSuc = true 
               }
               else{
-                console.log()
+                this.needLogin = true 
               }
             })
           },
@@ -222,6 +253,17 @@ import axios from 'axios'
             this.filterBy = false,
             this.overLayFlag = false
           },
+
+          // 进入购物车页面
+          goCart(){
+            this.$router.push({path:'/cart'})
+          },
+
+          // 关闭弹窗
+          handleClose(){
+            this.addSuc = false 
+            this.needLogin = false 
+          }
         }
     }
 </script>
