@@ -83,4 +83,25 @@ router.get('/checkLogin', (req, res, next) => {
     }
 })
 
+// 查询购物车信息
+router.get('/cartList', (req, res, next) => {
+    let userId = req.cookies.userId
+    User.findOne({ userId: userId }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message
+            })
+        } else {
+            if (doc) {
+                res.json({
+                    status: '1',
+                    msg: '',
+                    result: doc.cartList
+                })
+            }
+        }
+    })
+})
+
 module.exports = router;
