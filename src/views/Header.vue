@@ -41,7 +41,7 @@
             </div>
             <el-dialog title="登录" :visible.sync='dialogFormVisible' width="320px">
               <div class="errorTip" v-show="errorTip">
-                <p><i class="el-icon-error"> </i> 用户名密码为空或错误</p>
+                <p><i class="el-icon-error"> </i> 用户名/密码为空或错误</p>
               </div>
                   <el-input v-model="userName" auto-complete="off" class="elinput" placeholder="请输入用户名" prefix-icon="el-icon-edit">
                   </el-input>
@@ -81,7 +81,11 @@ import axios from 'axios'
 
       // 登出
       logout(){
-
+        axios.post('/users/logout').then((res)=>{
+          if(res.data.status === '0'){
+            this.name = '' 
+          }
+        })
       },
 
       // 登录取消按钮
