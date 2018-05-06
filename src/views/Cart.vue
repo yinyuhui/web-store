@@ -156,8 +156,8 @@
                     <div class="cart-foot-inner">
                         <div class="cart-foot-l">
                             <div class="item-all-check">
-                                <a href="javascipt:;">
-                                    <span class="checkbox-btn item-check-btn">
+                                <a href="javascipt:;" @click="toggleCheckAll">
+                                    <span class="checkbox-btn item-check-btn" :class="{'check': isCheckAll}">
                                         <svg class="icon icon-ok">
                                             <use xlink:href="#icon-ok" />
                                         </svg>
@@ -220,6 +220,21 @@ export default {
         this.init()
     },
 
+    computed: {
+        isCheckAll() {
+            return this.checkedCount === this.cartList.length
+        },
+        checkedCount(){
+            let count = 0
+            this.cartList.forEach(item => {
+                if(item.checked === '1'){
+                    count++
+                }
+            })
+            return count
+        }
+    },
+
     methods: {
 
         // 页面初始化
@@ -271,6 +286,20 @@ export default {
                 checked: item.checked
             }, (res) => {
                 console.log(res.data.result)
+            })
+        },
+
+        // 是否全选
+        toggleCheckAll(){
+            let isCheckAllFlag = !this.isCheckAll
+            this.cartList.forEach((item) => {
+                item.checked = isCheckAllFlag ? '1' : '0'
+            })
+
+            axios.post('/users/cartCheckAll', {
+                isCheckAll: isCheckAllFlag
+            }, res => {
+
             })
         }
     }
