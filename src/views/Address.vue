@@ -12,7 +12,7 @@
     <div>
         <nav-header></nav-header>
         <nav-bread>
-            <span>购物车</span>
+            <span>收货地址</span>
         </nav-bread>
 
         <div class="checkout-page">
@@ -79,7 +79,7 @@
                     <div class="addr-list-wrap">
                         <div class="addr-list">
                             <ul>
-                                <li v-for="(item, index) in addressListFilter" :key="item.addressId" :class="{'check':checkInedx === index}" @click="checkInedx = index">
+                                <li v-for="(item, index) in addressListFilter" :key="item.addressId" :class="{'check':checkIndex === index}" @click="checkIndex = index; selectAddrId = item.addressId">
                                     <dl>
                                         <dt>{{item.userName}}</dt>
                                         <dd class="address">{{item.streetName}}</dd>
@@ -134,17 +134,17 @@
                         <div class="shipping-method">
                             <ul>
                                 <li class="check">
-                                    <div class="name">Standard shipping</div>
-                                    <div class="price">Free</div>
+                                    <div class="name">默认配送</div>
+                                    <div class="price">免费</div>
                                     <div class="shipping-tips">
-                                        <p>Once shipped，Order should arrive in the destination in 1-7 business days</p>
+                                        <p>发货后，订单将在 1 - 7 个工作日内送达。</p>
                                     </div>
                                 </li>
                             </ul>
                         </div>
                     </div>
-                    <div class="next-btn-wrap">
-                        <a class="btn btn--m btn--red" href="#">下一步</a>
+                    <div class="next-btn-wrap" @click="goToOrderConfirm">
+                        <a class="btn btn--m btn--red" href="javascipt:;" >下一步</a>
                     </div>
                 </div>
             </div>
@@ -183,9 +183,10 @@ export default {
 		return {
 			addressList: [],
 			limit: 3, // 最多显示四条地址，多的通过more展开
-            checkInedx: 0, // 选中的地址
-            isDeleteDialogShow: false,
-            addressId: ''
+			checkIndex: 0, // 点击为当前地址，可能不是默认
+			isDeleteDialogShow: false,
+			addressId: '',
+			selectAddrId: 0
 		}
 	},
 
@@ -222,9 +223,9 @@ export default {
 				.then(() => {
 					this.init()
 				})
-        },
-        
-        // 取消删除地址
+		},
+
+		// 取消删除地址
 		onCancelDelete() {
 			this.isDeleteDialogShow = false
 		},
@@ -241,13 +242,22 @@ export default {
 						this.init()
 					}
 				})
-        },
-        
-        // 删除地址按钮
-        onDeleteAddress(addressId){
-            this.addressId = addressId
-            this.isDeleteDialogShow = true
-        },
+		},
+
+		// 删除地址按钮
+		onDeleteAddress(addressId) {
+			this.addressId = addressId
+			this.isDeleteDialogShow = true
+		},
+
+		// 跳到点击下一步查看订单页
+		goToOrderConfirm(addressId) {
+			// console.log(11)
+            this.$router.push({ path: '/orderConfirm', query: { addressId: this.selectAddrId } })
+            // this.$router.push({path:'/orderConfirm', query: { addressId: this.selectAddrId }})
+            // debugger
+            // this.$router.push({path:'/cart'})
+		}
 	}
 }
 </script>

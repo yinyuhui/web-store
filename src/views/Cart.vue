@@ -169,7 +169,7 @@
                                 <span class="total-price">{{totalPrice | currency('￥')}}</span>
                             </div>
                             <div class="btn-wrap">
-                                <a class="btn btn--red" :class="{'btn--dis': checkedCount === 0}" @click="onCheckOut">结算</a>
+                                <a href="javascipt:;" class="btn btn--red" :class="{'btn--dis': checkedCount === 0}" @click="onCheckOut">结算</a>
                             </div>
                         </div>
                     </div>
