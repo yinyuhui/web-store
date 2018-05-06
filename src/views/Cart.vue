@@ -137,7 +137,7 @@
                                     </div>
                                 </div>
                                 <div class="cart-tab-4">
-                                    <div class="item-price-total">{{item.salePrice * item.productNum}}</div>
+                                    <div class="item-price-total">{{item.salePrice * item.productNum | currency('￥')}}</div>
                                 </div>
                                 <div class="cart-tab-5">
                                     <div class="cart-item-opration" @click="onDelete(item.productId)">
@@ -169,7 +169,7 @@
                         <div class="cart-foot-r">
                             <div class="item-total">
                                 <span>合计: </span>
-                                <span class="total-price">500</span>
+                                <span class="total-price">{{totalPrice | currency('￥')}}</span>
                             </div>
                             <div class="btn-wrap">
                                 <a class="btn btn--red">结算</a>
@@ -216,15 +216,12 @@ export default {
         };
     },
     
-    mounted() {
-        this.init()
-    },
-
+    
     computed: {
         isCheckAll() {
             return this.checkedCount === this.cartList.length
         },
-        checkedCount(){
+        checkedCount() {
             let count = 0
             this.cartList.forEach(item => {
                 if(item.checked === '1'){
@@ -232,7 +229,20 @@ export default {
                 }
             })
             return count
+        },
+        totalPrice() {
+            let count = 0
+            this.cartList.forEach(item => {
+                if(item.checked === '1'){
+                    count += parseFloat(item.salePrice) * parseInt(item.productNum)
+                }
+            })
+            return count
         }
+    },
+
+    mounted() {
+        this.init()
     },
 
     methods: {
@@ -240,7 +250,7 @@ export default {
         // 页面初始化
         init() {
             axios.get('/users/cartList').then((res) => {
-               this.cartList = res.data.result
+                this.cartList = res.data.result
             //    console.log(this.cartList)
             })
         },

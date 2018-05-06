@@ -7,12 +7,16 @@ import VueLazyLoad from 'vue-lazyload'
 import VueInfiniteScroll from 'vue-infinite-scroll'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import { currency } from './util/currency'
+
 
 Vue.use(VueInfiniteScroll)
 Vue.use(ElementUI)
 Vue.use(VueLazyLoad, {
     loading: '/static/loading-svg/loading-bars.svg'
 })
+
+Vue.filter('currency', currency)
 
 Vue.config.productionTip = false
 

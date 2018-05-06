@@ -51,7 +51,7 @@
                     </div>
                     <div class="main">
                       <div class="name">{{item.productName}}</div>
-                      <div class="price">{{item.salePrice}}</div>
+                      <div class="price">{{item.salePrice | currency('￥')}}</div>
                       <div class="btn-area">
                         <a href="javascript:;" class="btn btn--m" @click="addCart(item.productId)">加入购物车</a>
                       </div>
@@ -107,6 +107,7 @@ import NavHeader from './Header'
 import NavFooter from './Footer'
 import NavBread from './Bread'
 import axios from 'axios'
+
     export default{
         data() {
             return {
@@ -154,14 +155,17 @@ import axios from 'axios'
               addSuc: false,
             }
         },
+
         components: {
           NavHeader,
           NavFooter,
           NavBread
         },
+
         mounted: function() {
           this.getGoodsList()
         },
+
         methods: {
 
           // 获得商品列表信息
