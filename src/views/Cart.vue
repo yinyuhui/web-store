@@ -106,10 +106,7 @@
                             <li v-for='item in cartList' :key="item._id">
                                 <div class="cart-tab-1">
                                     <div class="cart-item-check">
-                                        <a href="javascipt:;"
-                                           class="checkbox-btn item-check-btn"
-                                           :class="{'check': item.checked === '1'}" 
-                                           @click="editCart('checkProduct',item)">
+                                        <a href="javascipt:;" class="checkbox-btn item-check-btn" :class="{'check': item.checked === '1'}" @click="editCart('checkProduct',item)">
                                             <svg class="icon icon-ok">
                                                 <use xlink:href="#icon-ok"></use>
                                             </svg>
@@ -172,20 +169,20 @@
                                 <span class="total-price">{{totalPrice | currency('￥')}}</span>
                             </div>
                             <div class="btn-wrap">
-                                <a class="btn btn--red">结算</a>
+                                <a class="btn btn--red" :class="{'btn--dis': checkedCount === 0}" @click="onCheckOut">结算</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <el-dialog  :visible.sync='isDeleteDialogShow' width="300px">
-              <div>
-                <p>你确定要删除这个商品吗？</p>
-              </div>
-              <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="onSubmitDelete">确 定</el-button>
-                <el-button @click="onCancelDelete">取 消</el-button>
-              </div>
+            <el-dialog :visible.sync='isDeleteDialogShow' width="300px">
+                <div>
+                    <p>你确定要删除这个商品吗？</p>
+                </div>
+                <div slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="onSubmitDelete">确 定</el-button>
+                    <el-button @click="onCancelDelete">取 消</el-button>
+                </div>
             </el-dialog>
         </div>
         <nav-footer></nav-footer>
@@ -193,14 +190,14 @@
 </template>
 
 <script>
-import './../assets/css/base.css';
-import './../assets/css/product.css';
-import './../assets/css/login.css';
-import './../assets/css/checkout.css';
-import NavHeader from './Header';
-import NavFooter from './Footer';
-import NavBread from './Bread';
-import axios from 'axios';
+import './../assets/css/base.css'
+import './../assets/css/product.css'
+import './../assets/css/login.css'
+import './../assets/css/checkout.css'
+import NavHeader from './Header'
+import NavFooter from './Footer'
+import NavBread from './Bread'
+import axios from 'axios'
 export default {
 	components: {
 		NavHeader,
@@ -210,108 +207,121 @@ export default {
 
 	data() {
 		return {
-            cartList: [],
-            isDeleteDialogShow: false,
-            productId: ''
-        };
-    },
-    
-    
-    computed: {
-        isCheckAll() {
-            return this.checkedCount === this.cartList.length
-        },
-        checkedCount() {
-            let count = 0
-            this.cartList.forEach(item => {
-                if(item.checked === '1'){
-                    count++
-                }
-            })
-            return count
-        },
-        totalPrice() {
-            let count = 0
-            this.cartList.forEach(item => {
-                if(item.checked === '1'){
-                    count += parseFloat(item.salePrice) * parseInt(item.productNum)
-                }
-            })
-            return count
-        }
-    },
+			cartList: [],
+			isDeleteDialogShow: false,
+			productId: ''
+		}
+	},
 
-    mounted() {
-        this.init()
-    },
+	computed: {
+		isCheckAll() {
+			return this.checkedCount === this.cartList.length
+		},
+		checkedCount() {
+			let count = 0
+			this.cartList.forEach(item => {
+				if (item.checked === '1') {
+					count++
+				}
+			})
+			return count
+		},
+		totalPrice() {
+			let count = 0
+			this.cartList.forEach(item => {
+				if (item.checked === '1') {
+					count += parseFloat(item.salePrice) * parseInt(item.productNum)
+				}
+			})
+			return count
+		}
+	},
 
-    methods: {
+	mounted() {
+		this.init()
+	},
 
-        // 页面初始化
-        init() {
-            axios.get('/users/cartList').then((res) => {
-                this.cartList = res.data.result
-            //    console.log(this.cartList)
-            })
-        },
+	methods: {
+		// 页面初始化
+		init() {
+			axios.get('/users/cartList').then(res => {
+				this.cartList = res.data.result
+				//    console.log(this.cartList)
+			})
+		},
 
-        // 删除按钮
-        onDelete(productId) {
-            this.productId = productId
-            this.isDeleteDialogShow = true
-        },
+		// 删除按钮
+		onDelete(productId) {
+			this.productId = productId
+			this.isDeleteDialogShow = true
+		},
 
-        // 取消删除商品
-        onCancelDelete() {
-            this.isDeleteDialogShow = false
-        },
+		// 取消删除商品
+		onCancelDelete() {
+			this.isDeleteDialogShow = false
+		},
 
-        // 确认删除商品
-        onSubmitDelete() {
-            axios.post('/users/cartDel', {
-                productId: this.productId
-                }).then((res) => {
-                if(res.data.status === '0') {
-                    this.isDeleteDialogShow = false
-                    this.init()
-                }
-            })
-        },
+		// 确认删除商品
+		onSubmitDelete() {
+			axios
+				.post('/users/cartDel', {
+					productId: this.productId
+				})
+				.then(res => {
+					if (res.data.status === '0') {
+						this.isDeleteDialogShow = false
+						this.init()
+					}
+				})
+		},
 
-        // 编辑商品数量及是否选中
-        editCart(opration, item) {
-            if(opration === 'add') {
-                item.productNum++
-            } else if(opration === 'minu') {
-                if(item.productNum <= 1) {
-                    return                  
-                }
-                item.productNum--  
-            } else{
-                item.checked = item.checked === '1' ? '0' : '1'
-            }
-            axios.post('/users/cartEdit', {
-                productId: item.productId,
-                productNum: item.productNum,
-                checked: item.checked
-            }, (res) => {
-                console.log(res.data.result)
-            })
-        },
+		// 编辑商品数量及是否选中
+		editCart(opration, item) {
+			if (opration === 'add') {
+				item.productNum++
+			} else if (opration === 'minu') {
+				if (item.productNum <= 1) {
+					return
+				}
+				item.productNum--
+			} else {
+				item.checked = item.checked === '1' ? '0' : '1'
+			}
+			axios.post(
+				'/users/cartEdit',
+				{
+					productId: item.productId,
+					productNum: item.productNum,
+					checked: item.checked
+				},
+				res => {
+					console.log(res.data.result)
+				}
+			)
+		},
 
-        // 是否全选
-        toggleCheckAll(){
-            let isCheckAllFlag = !this.isCheckAll
-            this.cartList.forEach((item) => {
-                item.checked = isCheckAllFlag ? '1' : '0'
-            })
+		// 是否全选
+		toggleCheckAll() {
+			let isCheckAllFlag = !this.isCheckAll
+			this.cartList.forEach(item => {
+				item.checked = isCheckAllFlag ? '1' : '0'
+			})
 
-            axios.post('/users/cartCheckAll', {
-                isCheckAll: isCheckAllFlag
-            }, res => {
+			axios.post(
+				'/users/cartCheckAll',
+				{
+					isCheckAll: isCheckAllFlag
+				},
+				res => {}
+			)
+		},
 
-            })
-        }
-    }
-};
+		// 购物车结算
+		onCheckOut() {
+			if (this.checkedCount > 0) {
+				this.$router.push('/address')
+			}
+		}
+	}
+}
 </script>
