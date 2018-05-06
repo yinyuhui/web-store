@@ -104,4 +104,63 @@ router.get('/cartList', (req, res, next) => {
     })
 })
 
+// 删除商品
+router.post('/cartDel', (req, res, next) => {
+    let userId = req.cookies.userId,
+        productId = req.body.productId
+    User.update({
+        userId: userId
+    }, {
+        $pull: {
+            'cartList': {
+                'productId': productId
+            }
+        }
+    }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message,
+                result: ''
+            })
+        } else {
+            res.json({
+                status: '0',
+                msg: '',
+                result: 'success'
+            })
+        }
+    })
+})
+
+// 编辑商品数量，修改是否选中
+router.post('/cartEdit', (req, res, next) => {
+    let userId = req.cookies.userId,
+        productId = req.body.productId,
+        productNum = req.body.productNum,
+        checked = req.body.checked
+
+    User.update({
+        'userId': userId,
+        'cartList.productId': productId
+    }, {
+        'cartList.$.productNum': productNum,
+        'cartList.$.checked': checked,
+    }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message,
+                result: ''
+            })
+        } else {
+            res.json({
+                status: '0',
+                msg: '',
+                result: 'success'
+            })
+        }
+    })
+})
+
 module.exports = router;
