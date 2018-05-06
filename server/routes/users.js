@@ -271,7 +271,35 @@ router.post('/setDefaultAddress', (req, res, next) => {
             }
         })
     }
+})
 
+// 删除地址
+router.post('/addressDel', (req, res, next) => {
+    let userId = req.cookies.userId,
+        addressId = req.body.addressId
+    User.update({
+        userId: userId
+    }, {
+        $pull: {
+            'addressList': {
+                'addressId': addressId
+            }
+        }
+    }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message,
+                result: ''
+            })
+        } else {
+            res.json({
+                status: '0',
+                msg: '',
+                result: 'success'
+            })
+        }
+    })
 })
 
 module.exports = router;
