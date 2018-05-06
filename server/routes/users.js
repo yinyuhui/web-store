@@ -95,7 +95,7 @@ router.get('/cartList', (req, res, next) => {
         } else {
             if (doc) {
                 res.json({
-                    status: '1',
+                    status: '0',
                     msg: '',
                     result: doc.cartList
                 })
@@ -159,6 +159,42 @@ router.post('/cartEdit', (req, res, next) => {
                 msg: '',
                 result: 'success'
             })
+        }
+    })
+})
+
+// 商品是否全选
+router.post('/cartCheckAll', (req, res, next) => {
+    let userId = req.cookies.userId,
+        isCheckAll = req.body.isCheckAll ? '1' : '0'
+
+    User.findOne({ userId: userId }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message
+            })
+        } else {
+            if (doc) {
+                doc.cartList.forEach(item => {
+                    item.checked = isCheckAll
+                });
+                doc.save((err1, doc1) => {
+                    if (err) {
+                        res.json({
+                            status: '1',
+                            msg: err.message
+                        })
+                    } else {
+                        res.json({
+                            status: '0',
+                            msg: '',
+                            result: 'success'
+                        })
+
+                    }
+                })
+            }
         }
     })
 })
