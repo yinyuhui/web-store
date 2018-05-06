@@ -3,12 +3,12 @@
 	.footer__wrap {
 		display: none;
 	}
-    .price-count-wrap{
-        margin-bottom: 60px;
-    }
+	.price-count-wrap {
+		margin-bottom: 60px;
+	}
 }
-.price-count li{
-    font-size: 16px;
+.price-count li {
+	font-size: 16px;
 }
 </style>
 <template>
@@ -142,10 +142,10 @@
 
                 <div class="order-foot-wrap">
                     <div class="prev-btn-wrap">
-                        <button class="btn btn--m">上一步</button>
+                        <button class="btn btn--m" @click="goBack">上一步</button>
                     </div>
                     <div class="next-btn-wrap">
-                        <button class="btn btn--m btn--red">去支付订单</button>
+                        <button class="btn btn--m btn--red" @click="goPayment">去支付订单</button>
                     </div>
                 </div>
             </div>
@@ -175,34 +175,55 @@ export default {
 		return {
 			cartList: [],
 			isDeleteDialogShow: false,
-            productId: '',
-            cartList: [],   // 购物车中选中的商品数组
-            subtotal: 0,
-            shipping: 15,
-            discount: 20,
-            tax: 10,
-            total: 0
+			productId: '',
+			cartList: [], // 购物车中选中的商品数组
+			subtotal: 0,
+			shipping: 15,
+			discount: 20,
+			tax: 10,
+			total: 0
 		}
-    },
+	},
 
-    mounted() {
-        this.init()
-    },
-    
-    methods: {
-        init() {
-            axios.get('/users/cartList').then(res => {
-                this.cartList = res.data.result
-                this.subtotal = 0
-                this.total = 0
-                this.cartList.forEach(item => {
-                    if(item.checked === '1'){
-                        this.subtotal += item.salePrice * item.productNum
-                    }
-                })
-                this.total = this.subtotal + this.shipping + this.tax - this.discount
+	mounted() {
+		this.init()
+	},
+
+	methods: {
+		init() {
+			axios.get('/users/cartList').then(res => {
+				this.cartList = res.data.result
+				this.subtotal = 0
+				this.total = 0
+				this.cartList.forEach(item => {
+					if (item.checked === '1') {
+						this.subtotal += item.salePrice * item.productNum
+					}
+				})
+				this.total = this.subtotal + this.shipping + this.tax - this.discount
+			})
+        },
+        
+        goBack(){
+            this.$router.go(-1)
+        },
+
+        goPayment(){
+            let addressId = this.$route.query.addressId
+            axios.post('/users/payment', {
+                addressId : addressId,
+                orderTotal: this.total
+            }).then(res=>{
+                if(res.data.status === '0'){
+                    this.$router.push({
+                        path: '/orderSuccess',
+                        query: {
+                            orderId: res.data.orderId
+                        }
+                    })
+                }
             })
-        }
-    }
+        },
+	}
 }
 </script>

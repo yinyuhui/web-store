@@ -1,3 +1,5 @@
+require('./../util/util')
+
 var express = require('express');
 var router = express.Router();
 var User = require('./../models/user')
@@ -297,6 +299,79 @@ router.post('/addressDel', (req, res, next) => {
                 status: '0',
                 msg: '',
                 result: 'success'
+            })
+        }
+    })
+})
+
+// 创建订单
+router.post('/payment', (req, res, next) => {
+    let userId = req.cookies.userId,
+        orderTotal = req.body.orderTotal,
+        addressId = req.body.addressId
+
+    User.findOne({ userId: userId }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message,
+                result: ''
+            })
+        } else {
+            let address = ''
+
+            // 获取用户地址信息
+            doc.addressList.forEach((item) => {
+                if (addressId === item.addressId) {
+                    address = item
+                }
+            })
+
+            let goodsList = []
+
+            // 获取用户购物车的购买商品
+            doc.cartList.forEach((item) => {
+                if (item.checked === '1') {
+                    goodsList.push(item)
+                }
+            })
+
+            let r1 = Math.floor(Math.random() * 10)
+            let r2 = Math.floor(Math.random() * 10)
+            let sysDate = new Date().Format('yyyyMMddhhmmss')
+            let createDate = new Date().Format('yyyy-MM-dd hh:mm:ss')
+            let platform = '682'
+            let orderId = platform + r1 + sysDate + r2
+
+
+            let order = {
+                orderId: orderId,
+                orderTotal: orderTotal,
+                addressInfo: address,
+                goodsList: goodsList,
+                orderStatus: '1',
+                createDate: createDate
+            }
+
+            doc.orderList.push(order)
+
+            doc.save((err1, doc1) => {
+                if (err) {
+                    res.json({
+                        status: '1',
+                        msg: err.message,
+                        result: ''
+                    })
+                } else {
+                    res.json({
+                        status: '0',
+                        msg: '',
+                        result: {
+                            orderId: order.orderId,
+                            orderTotal: order.orderTotal
+                        }
+                    })
+                }
             })
         }
     })

@@ -3,9 +3,9 @@
 	.footer__wrap {
 		display: none;
 	}
-    .shipping-method-wrap{
-        margin-bottom: 60px;
-    }
+	.shipping-method-wrap {
+		margin-bottom: 60px;
+	}
 }
 .hidden {
 	display: none;
@@ -147,7 +147,7 @@
                         </div>
                     </div>
                     <div class="next-btn-wrap" @click="goToOrderConfirm">
-                        <a class="btn btn--m btn--red" href="javascipt:;" >下一步</a>
+                        <a class="btn btn--m btn--red" href="javascipt:;">下一步</a>
                     </div>
                 </div>
             </div>
@@ -206,13 +206,13 @@ export default {
 	methods: {
 		init() {
 			axios.get('/users/addressList').then(res => {
-                this.addressList = res.data.result
-                this.selectAddrId = this.addressList[0].addressId
-                // this.addressList.forEach(item => {
-                //     if(item.isDefault === true){
-                //         this.selectAddrId = item.addressId
-                //     }
-                // })
+				this.addressList = res.data.result
+				this.selectAddrId = this.addressList[0].addressId
+				// this.addressList.forEach(item => {
+				//     if(item.isDefault === true){
+				//         this.selectAddrId = item.addressId
+				//     }
+				// })
 			})
 		},
 
@@ -261,7 +261,7 @@ export default {
 
 		// 跳到点击下一步查看订单页
 		goToOrderConfirm(addressId) {
-            this.$router.push({ path: '/orderConfirm', query: { addressId: this.selectAddrId } })
+			this.$router.push({ path: '/orderConfirm', query: { addressId: this.selectAddrId } })
 		}
 	}
 }
