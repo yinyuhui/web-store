@@ -106,14 +106,17 @@
                             <li v-for='item in cartList' :key="item._id">
                                 <div class="cart-tab-1">
                                     <div class="cart-item-check">
-                                        <a href="javascipt:;" class="checkbox-btn item-check-btn">
+                                        <a href="javascipt:;"
+                                           class="checkbox-btn item-check-btn"
+                                           :class="{'check': item.checked === '1'}" 
+                                           @click="editCart('checkProduct',item)">
                                             <svg class="icon icon-ok">
                                                 <use xlink:href="#icon-ok"></use>
                                             </svg>
                                         </a>
                                     </div>
                                     <div class="cart-item-pic">
-                                        <img :src="'/static/'+item.productImage">
+                                        <img :src="'/static/'+item.productImage" :alt="item.productName">
                                     </div>
                                     <div class="cart-item-title">
                                         <div class="item-name">{{item.productName}}</div>
@@ -126,9 +129,9 @@
                                     <div class="item-quantity">
                                         <div class="select-self select-self-open">
                                             <div class="select-self-area">
-                                                <a class="input-sub">-</a>
+                                                <a class="input-sub" @click="editCart('minu', item)">-</a>
                                                 <span class="select-ipt">{{item.productNum}}</span>
-                                                <a class="input-add">+</a>
+                                                <a class="input-add" @click="editCart('add', item)">+</a>
                                             </div>
                                         </div>
                                     </div>
@@ -137,7 +140,7 @@
                                     <div class="item-price-total">{{item.salePrice * item.productNum}}</div>
                                 </div>
                                 <div class="cart-tab-5">
-                                    <div class="cart-item-opration">
+                                    <div class="cart-item-opration" @click="onDelete(item.productId)">
                                         <a href="javascript:;" class="item-edit-btn">
                                             <svg class="icon icon-del">
                                                 <use xlink:href="#icon-del"></use>
@@ -175,6 +178,15 @@
                     </div>
                 </div>
             </div>
+            <el-dialog  :visible.sync='isDeleteDialogShow' width="300px">
+              <div>
+                <p>你确定要删除这个商品吗？</p>
+              </div>
+              <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="onSubmitDelete">确 定</el-button>
+                <el-button @click="onCancelDelete">取 消</el-button>
+              </div>
+            </el-dialog>
         </div>
         <nav-footer></nav-footer>
     </div>
@@ -198,7 +210,9 @@ export default {
 
 	data() {
 		return {
-            cartList: []
+            cartList: [],
+            isDeleteDialogShow: false,
+            productId: ''
         };
     },
     
@@ -207,10 +221,56 @@ export default {
     },
 
     methods: {
-        init(){
-            axios.get('/users/cartList').then((res)=>{
+
+        // 页面初始化
+        init() {
+            axios.get('/users/cartList').then((res) => {
                this.cartList = res.data.result
             //    console.log(this.cartList)
+            })
+        },
+
+        // 删除按钮
+        onDelete(productId) {
+            this.productId = productId
+            this.isDeleteDialogShow = true
+        },
+
+        // 取消删除商品
+        onCancelDelete() {
+            this.isDeleteDialogShow = false
+        },
+
+        // 确认删除商品
+        onSubmitDelete() {
+            axios.post('/users/cartDel', {
+                productId: this.productId
+                }).then((res) => {
+                if(res.data.status === '0') {
+                    this.isDeleteDialogShow = false
+                    this.init()
+                }
+            })
+        },
+
+        // 编辑商品数量及是否选中
+        editCart(opration, item) {
+            if(opration === 'add') {
+                item.productNum++
+            } else if(opration === 'minu') {
+                if(item.productNum <= 1) {
+                    return                  
+                }
+                item.productNum--  
+            } else{
+                item.checked = item.checked === '1' ? '0' : '1'
+            }
+            axios.post('/users/cartEdit', {
+                productId: item.productId,
+                productNum: item.productNum,
+                checked: item.checked
+            }, (res) => {
+                console.log(res.data.result)
             })
         }
     }
