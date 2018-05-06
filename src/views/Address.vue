@@ -4,6 +4,9 @@
 		display: none;
 	}
 }
+.hidden {
+	display: none;
+}
 </style>
 <template>
     <div>
@@ -75,8 +78,8 @@
                     </div>
                     <div class="addr-list-wrap">
                         <div class="addr-list">
-                            <ul>                               
-                                <li v-for="item in addressList">
+                            <ul>
+                                <li v-for="(item, index) in addressListFilter" :key="item.addressId" :class="{'check':checkInedx === index}" @click="checkInedx = index">
                                     <dl>
                                         <dt>{{item.userName}}</dt>
                                         <dd class="address">{{item.streetName}}</dd>
@@ -90,13 +93,13 @@
                                         </a>
                                     </div>
                                     <div class="addr-opration addr-set-default">
-                                        <a href="javascript:;" class="addr-set-default-btn">
+                                        <a href="javascript:;" class="addr-set-default-btn" v-if="!item.isDefault" @click="setDefaultAddress(item.addressId)">
                                             <i>设为默认地址</i>
                                         </a>
                                     </div>
-                                    <div class="addr-opration addr-default">默认地址</div>
+                                    <div class="addr-opration addr-default" v-if="item.isDefault">默认地址</div>
                                 </li>
-                                
+
                                 <li class="addr-new">
                                     <div class="add-new-inner">
                                         <i class="icon-add">
@@ -110,8 +113,8 @@
                             </ul>
                         </div>
 
-                        <div class="shipping-addr-more">
-                            <a class="addr-more-btn up-down-btn" href="javascript:;">
+                        <div class="shipping-addr-more" @click="showMoreAddress" :class="{'hidden': limit > addressList.length}">
+                            <a class="addr-more-btn up-down-btn" href="javascript:;" :class="{'open': limit > 3}">
                                 更多
                                 <i class="i-up-down">
                                     <i class="i-up-down-l"></i>
@@ -161,7 +164,7 @@ import NavBread from './Bread'
 import axios from 'axios'
 
 export default {
-    components: {
+	components: {
 		NavHeader,
 		NavFooter,
 		NavBread
@@ -169,20 +172,46 @@ export default {
 
 	data() {
 		return {
-            addressList: []
-        }
-    },
+			addressList: [],
+			limit: 3, // 最多显示四条地址，多的通过more展开
+			checkInedx: 0 // 选中的地址
+		}
+	},
 
-    mounted() {
-        this.init()
-    },
-    
-    methods: {
-        init() {
-            axios.get('/users/addressList').then(res=>{
-                this.addressList = res.data.result 
-            })
-        }
-    }
+	computed: {
+		addressListFilter() {
+			return this.addressList.slice(0, this.limit)
+		}
+	},
+
+	mounted() {
+		this.init()
+	},
+
+	methods: {
+		init() {
+			axios.get('/users/addressList').then(res => {
+				this.addressList = res.data.result
+			})
+		},
+
+		showMoreAddress() {
+			if (this.limit === 3) {
+				this.limit = this.addressList.length
+			} else {
+				this.limit = 3
+			}
+		},
+
+		setDefaultAddress(addressId) {
+			axios
+				.post('/users/setDefaultAddress', {
+					addressId: addressId
+				})
+				.then(() => {
+					this.init()
+				})
+		}
+	}
 }
 </script>
