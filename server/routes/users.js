@@ -199,4 +199,26 @@ router.post('/cartCheckAll', (req, res, next) => {
     })
 })
 
+// 查询用户地址
+router.get('/addressList', (req, res, next) => {
+    let userId = req.cookies.userId
+
+    User.findOne({ userId: userId }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message
+            })
+        } else {
+            res.json({
+                status: '0',
+                msg: '',
+                result: doc.addressList
+            })
+
+        }
+    })
+
+})
+
 module.exports = router;
