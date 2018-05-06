@@ -8,6 +8,10 @@
 		font-size: 1.4rem;
 		margin: 0 8px 0 0;
 	}
+
+    .item-list-wrap{
+        margin-bottom: 66px;
+    }
 }
 /* .item-total{
     width: 100px;

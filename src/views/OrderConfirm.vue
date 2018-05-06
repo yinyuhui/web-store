@@ -3,6 +3,9 @@
 	.footer__wrap {
 		display: none;
 	}
+    .price-count-wrap{
+        margin-bottom: 60px;
+    }
 }
 .price-count li{
     font-size: 16px;
@@ -12,7 +15,7 @@
     <div>
         <nav-header></nav-header>
         <nav-bread>
-            <span>购物车</span>
+            <span>订单信息</span>
         </nav-bread>
 
         <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -53,11 +56,11 @@
                         <li class="cur">
                             <span>确认</span>地址</li>
                         <li class="cur">
-                            <span>查看</span>订单</li>
+                            <span>核对</span>订单</li>
                         <li>
                             <span>订单</span>支付</li>
                         <li>
-                            <span>订单</span>确认</li>
+                            <span>下单</span>成功</li>
                     </ul>
                 </div>
 
@@ -78,31 +81,31 @@
                             </ul>
                         </div>
                         <ul class="cart-item-list">
-                            <li>
+                            <li v-for="item in cartList" :key="item.productId" v-if="item.checked === '1'">
                                 <div class="cart-tab-1">
                                     <div class="cart-item-pic">
                                         <img src="" alt="">
                                     </div>
                                     <div class="cart-item-title">
-                                        <div class="item-name">小米6</div>
+                                        <div class="item-name">{{item.productName}}</div>
 
                                     </div>
                                 </div>
                                 <div class="cart-tab-2">
-                                    <div class="item-price">2499</div>
+                                    <div class="item-price">{{item.salePrice}}</div>
                                 </div>
                                 <div class="cart-tab-3">
                                     <div class="item-quantity">
                                         <div class="select-self">
                                             <div class="select-self-area">
-                                                <span class="select-ipt">×1</span>
+                                                <span class="select-ipt">×{{item.productNum}}</span>
                                             </div>
                                         </div>
                                         <div class="item-stock item-stock-no">有货</div>
                                     </div>
                                 </div>
                                 <div class="cart-tab-4">
-                                    <div class="item-price-total">$2499</div>
+                                    <div class="item-price-total">{{item.productNum * item.salePrice | currency('￥')}}</div>
                                 </div>
                             </li>
                         </ul>
@@ -115,23 +118,23 @@
                         <ul>
                             <li>
                                 <span>商品总金额:</span>
-                                <span>$2499</span>
+                                <span>{{ subtotal | currency('￥')}}</span>
                             </li>
                             <li>
                                 <span>运费:</span>
-                                <span>$100</span>
+                                <span>{{ shipping | currency('￥')}}</span>
                             </li>
                             <li>
                                 <span>折扣:</span>
-                                <span>$0</span>
+                                <span>{{ discount | currency('￥')}}</span>
                             </li>
                             <li>
                                 <span>税额:</span>
-                                <span>$400</span>
+                                <span>{{ tax | currency('￥')}}</span>
                             </li>
                             <li class="order-total-price">
                                 <span>订单总额:</span>
-                                <span>$1999</span>
+                                <span>{{ total | currency('￥')}}</span>
                             </li>
                         </ul>
                     </div>
@@ -173,10 +176,33 @@ export default {
 			cartList: [],
 			isDeleteDialogShow: false,
             productId: '',
-            cartList: []   // 购物车中选中的商品数组
+            cartList: [],   // 购物车中选中的商品数组
+            subtotal: 0,
+            shipping: 15,
+            discount: 20,
+            tax: 10,
+            total: 0
 		}
     },
+
+    mounted() {
+        this.init()
+    },
     
-    
+    methods: {
+        init() {
+            axios.get('/users/cartList').then(res => {
+                this.cartList = res.data.result
+                this.subtotal = 0
+                this.total = 0
+                this.cartList.forEach(item => {
+                    if(item.checked === '1'){
+                        this.subtotal += item.salePrice * item.productNum
+                    }
+                })
+                this.total = this.subtotal + this.shipping + this.tax - this.discount
+            })
+        }
+    }
 }
 </script>

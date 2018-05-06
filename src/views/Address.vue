@@ -3,6 +3,9 @@
 	.footer__wrap {
 		display: none;
 	}
+    .shipping-method-wrap{
+        margin-bottom: 60px;
+    }
 }
 .hidden {
 	display: none;
@@ -62,11 +65,11 @@
                             <li class="cur">
                                 <span>确认</span>地址</li>
                             <li>
-                                <span>查看</span>订单</li>
+                                <span>核对</span>订单</li>
                             <li>
                                 <span>订单</span>支付</li>
                             <li>
-                                <span>订单</span>确认</li>
+                                <span>下单</span>成功</li>
                         </ul>
                     </div>
 
@@ -203,7 +206,13 @@ export default {
 	methods: {
 		init() {
 			axios.get('/users/addressList').then(res => {
-				this.addressList = res.data.result
+                this.addressList = res.data.result
+                this.selectAddrId = this.addressList[0].addressId
+                // this.addressList.forEach(item => {
+                //     if(item.isDefault === true){
+                //         this.selectAddrId = item.addressId
+                //     }
+                // })
 			})
 		},
 
@@ -252,11 +261,7 @@ export default {
 
 		// 跳到点击下一步查看订单页
 		goToOrderConfirm(addressId) {
-			// console.log(11)
             this.$router.push({ path: '/orderConfirm', query: { addressId: this.selectAddrId } })
-            // this.$router.push({path:'/orderConfirm', query: { addressId: this.selectAddrId }})
-            // debugger
-            // this.$router.push({path:'/cart'})
 		}
 	}
 }
