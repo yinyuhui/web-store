@@ -86,7 +86,9 @@ router.get('/checkLogin', (req, res, next) => {
 // 查询购物车信息
 router.get('/cartList', (req, res, next) => {
     let userId = req.cookies.userId
-    User.findOne({ userId: userId }, (err, doc) => {
+    User.findOne({
+        userId: userId
+    }, (err, doc) => {
         if (err) {
             res.json({
                 status: '1',
@@ -168,7 +170,9 @@ router.post('/cartCheckAll', (req, res, next) => {
     let userId = req.cookies.userId,
         isCheckAll = req.body.isCheckAll ? '1' : '0'
 
-    User.findOne({ userId: userId }, (err, doc) => {
+    User.findOne({
+        userId: userId
+    }, (err, doc) => {
         if (err) {
             res.json({
                 status: '1',
@@ -203,7 +207,9 @@ router.post('/cartCheckAll', (req, res, next) => {
 router.get('/addressList', (req, res, next) => {
     let userId = req.cookies.userId
 
-    User.findOne({ userId: userId }, (err, doc) => {
+    User.findOne({
+        userId: userId
+    }, (err, doc) => {
         if (err) {
             res.json({
                 status: '1',
@@ -215,9 +221,56 @@ router.get('/addressList', (req, res, next) => {
                 msg: '',
                 result: doc.addressList
             })
-
         }
     })
+})
+
+// 设置默认地址
+router.post('/setDefaultAddress', (req, res, next) => {
+    let userId = req.cookies.userId,
+        addressId = req.body.addressId
+
+    if (!addressId) {
+        res.json({
+            status: '1',
+            msg: err.message
+        })
+    } else {
+        User.findOne({
+            userId: userId
+        }, (err, doc) => {
+            if (err) {
+                res.json({
+                    status: '1',
+                    msg: '没有地址ID'
+                })
+            } else {
+                let addressList = doc.addressList
+                addressList.forEach(item => {
+                    if (item.addressId === addressId) {
+                        item.isDefault = true
+                    } else {
+                        item.isDefault = false
+                    }
+                })
+
+                doc.save((err1, doc1) => {
+                    if (err1) {
+                        res.json({
+                            status: '1',
+                            msg: err.message
+                        })
+                    } else {
+                        res.json({
+                            status: '0',
+                            msg: '',
+                            result: 'success'
+                        })
+                    }
+                })
+            }
+        })
+    }
 
 })
 
