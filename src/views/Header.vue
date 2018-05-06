@@ -6,6 +6,10 @@
 .elinput{
   margin-bottom: 22px;
 }
+
+.navbar-left-container{
+  margin-left: 1px;
+}
 </style>
 
 
