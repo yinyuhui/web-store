@@ -86,7 +86,7 @@
                                         <dd class="tel">{{item.tel}}</dd>
                                     </dl>
                                     <div class="addr-opration addr-del">
-                                        <a href="javascript:;" class="addr-del-btn">
+                                        <a href="javascript:;" class="addr-del-btn" @click="onDeleteAddress(item.addressId)">
                                             <svg class="icon icon-del">
                                                 <use xlink:href="#icon-del"></use>
                                             </svg>
@@ -148,6 +148,15 @@
                     </div>
                 </div>
             </div>
+            <el-dialog :visible.sync='isDeleteDialogShow' width="300px">
+                <div>
+                    <p>你确定要删除这个地址吗？</p>
+                </div>
+                <div slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="onSubmitDelete">确 定</el-button>
+                    <el-button @click="onCancelDelete">取 消</el-button>
+                </div>
+            </el-dialog>
         </div>
         <nav-footer></nav-footer>
     </div>
@@ -174,7 +183,9 @@ export default {
 		return {
 			addressList: [],
 			limit: 3, // 最多显示四条地址，多的通过more展开
-			checkInedx: 0 // 选中的地址
+            checkInedx: 0, // 选中的地址
+            isDeleteDialogShow: false,
+            addressId: ''
 		}
 	},
 
@@ -211,7 +222,32 @@ export default {
 				.then(() => {
 					this.init()
 				})
-		}
+        },
+        
+        // 取消删除地址
+		onCancelDelete() {
+			this.isDeleteDialogShow = false
+		},
+
+		// 确认删除地址
+		onSubmitDelete() {
+			axios
+				.post('/users/addressDel', {
+					addressId: this.addressId
+				})
+				.then(res => {
+					if (res.data.status === '0') {
+						this.isDeleteDialogShow = false
+						this.init()
+					}
+				})
+        },
+        
+        // 删除地址按钮
+        onDeleteAddress(addressId){
+            this.addressId = addressId
+            this.isDeleteDialogShow = true
+        },
 	}
 }
 </script>
