@@ -118,7 +118,7 @@
                         <div slot="header" class="clearfix">
                             <span>订单号：{{item.orderId}}</span>
                             <i class=" el-icon-delete icons" style="float: right; padding: 3px 0" @click="deleteOrder(item.orderId) "></i>
-                            <i class="el-icon-view icons" style="float: right; padding: 3px 0; margin:0 10px" @click="deleteOrder(item.orderId) "></i>
+                            <i class="el-icon-view icons" style="float: right; padding: 3px 0; margin:0 10px" @click="goOrderDetail(item.orderId) "></i>
                         </div>
                         <div class="text item">
                             <p class="text item">商品数量：{{item.goodsList.length}} 件</p>
@@ -177,7 +177,7 @@ export default {
 		init() {
 			axios.get('/users/orderList').then(res => {
 				this.orderList = res.data.result.reverse()
-				console.log(this.orderList)
+				// console.log(this.orderList)
 			})
 		},
 
@@ -204,7 +204,17 @@ export default {
 						this.init()
 					}
 				})
-		}
+        },
+        
+        // 查看订单详情
+        goOrderDetail(orderId){
+            // console.log(orderId)
+            this.$router.push({path: '/orderDetail', 
+                query:{
+                    orderId: orderId
+                }
+            })
+        }
 	}
 }
 </script>

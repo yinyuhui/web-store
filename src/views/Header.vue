@@ -42,14 +42,14 @@
               <!-- <i class="el-icon-arrow-down el-icon--right"></i> -->
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="order">查看订单</el-dropdown-item>
+              <el-dropdown-item command="order">订单列表</el-dropdown-item>
               <el-dropdown-item command="address">地址管理</el-dropdown-item>
               <el-dropdown-item command="logout" divided @click="logout">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
 
-          <el-badge :value="cartLength" class="item">
-            <div class="navbar-cart-container" v-if="name">
+          <el-badge :value="cartLength" class="item" v-if="name">
+            <div class="navbar-cart-container">
               <span class="navbar-cart-count"></span>
               <a class="navbar-link navbar-cart-link" href="javascript:void(0)" @click="goCart">
                 <svg class="navbar-cart-logo">
@@ -99,7 +99,7 @@ export default {
 
 		// 获取购物车中商品数量
 		axios.get('/users/cartList').then(res => {
-			console.log(res.data.result)
+			// console.log(res.data.result)
 			res.data.result.forEach(item => {
 				this.cartLength += parseInt(item.productNum)
 			})

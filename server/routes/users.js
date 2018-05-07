@@ -403,9 +403,11 @@ router.get('/orderDetail', (req, res, next) => {
             let orderList = doc.orderList
             if (orderList.length > 0) {
                 let orderTotal = 0
+                let orderDetail = {}
                 orderList.forEach(item => {
                     if (item.orderId === orderId) {
                         orderTotal = item.orderTotal
+                        orderDetail = item
                     }
                 })
                 res.json({
@@ -413,7 +415,8 @@ router.get('/orderDetail', (req, res, next) => {
                     msg: '',
                     result: {
                         orderTotal: orderTotal,
-                        orderId: orderId
+                        orderId: orderId,
+                        orderDetail: orderDetail
                     }
                 })
             } else {
@@ -443,7 +446,7 @@ router.post('/addressDetail', (req, res, next) => {
             })
         } else {
             let addressList = doc.addressList
-            console.log(addressList)
+                // console.log(addressList)
             if (addressList.length > 0) {
                 // let orderTotal = 0
                 let userName = '',
