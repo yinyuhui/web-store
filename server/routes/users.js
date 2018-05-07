@@ -586,4 +586,32 @@ router.get('/orderList', (req, res, next) => {
     })
 })
 
+// 删除订单
+router.post('/orderDel', (req, res, next) => {
+    let userId = req.cookies.userId,
+        orderId = req.body.orderId
+    User.update({
+        userId: userId
+    }, {
+        $pull: {
+            'orderList': {
+                'orderId': orderId
+            }
+        }
+    }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message,
+                result: ''
+            })
+        } else {
+            res.json({
+                status: '0',
+                msg: '',
+                result: 'success'
+            })
+        }
+    })
+})
 module.exports = router;
