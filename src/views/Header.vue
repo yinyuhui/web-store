@@ -43,7 +43,7 @@
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="order">查看订单</el-dropdown-item>
-              <el-dropdown-item command="address">管理地址</el-dropdown-item>
+              <el-dropdown-item command="address">地址管理</el-dropdown-item>
               <el-dropdown-item command="logout" divided @click="logout">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -116,7 +116,7 @@ export default {
 
     // 地址列表页
     goAddressList(){
-      this.$router.push({path:'/address'})
+      this.$router.push({path:'/addressList'})
     },
 
     goCart(){
