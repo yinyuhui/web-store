@@ -84,7 +84,7 @@
                             <li v-for="item in cartList" :key="item.productId" v-if="item.checked === '1'">
                                 <div class="cart-tab-1">
                                     <div class="cart-item-pic">
-                                        <img src="" alt="">
+                                        <img :src="'/static/'+item.productImage" alt="">
                                     </div>
                                     <div class="cart-item-title">
                                         <div class="item-name">{{item.productName}}</div>
@@ -212,7 +212,11 @@ export default {
             let addressId = this.$route.query.addressId
             axios.post('/users/payment', {
                 addressId : addressId,
-                orderTotal: this.total
+                orderTotal: this.total,
+                subtotal: this.subtotal,
+                shipping: this.shipping,
+                discount: this.discount,
+                tax: this.tax,
             }).then(res=>{
                 if(res.data.status === '0'){
                     this.$router.push({
