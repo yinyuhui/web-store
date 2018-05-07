@@ -507,4 +507,57 @@ router.post('/addressEdit', (req, res, next) => {
     })
 })
 
+// 新增地址
+router.post('/addNewAddress', (req, res, next) => {
+    let userId = req.cookies.userId,
+        userName = req.body.userName,
+        tel = req.body.tel,
+        streetName = req.body.streetName
+
+    User.findOne({
+        userId: userId
+    }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message,
+                result: ''
+            })
+        } else {
+            let r1 = Math.floor(Math.random() * 10),
+                r2 = Math.floor(Math.random() * 10),
+                sysDate = new Date().Format('yyyyMMddhhmmss'),
+                platform = '682',
+                addressId = platform + r1 + sysDate + r2
+
+            let address = {
+                addressId: addressId,
+                userName: userName,
+                tel: tel,
+                streetName: streetName
+            }
+
+            doc.addressList.push(address)
+
+            doc.save((err1, doc1) => {
+                if (err) {
+                    res.json({
+                        status: '1',
+                        msg: err.message,
+                        result: ''
+                    })
+                } else {
+                    res.json({
+                        status: '0',
+                        msg: '',
+                        result: {
+                            addressId: address.addressId,
+                        }
+                    })
+                }
+            })
+        }
+    })
+})
+
 module.exports = router;
