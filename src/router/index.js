@@ -6,6 +6,7 @@ import Address from '@/views/Address.vue'
 import AddressList from '@/views/AddressList.vue'
 import OrderConfirm from '@/views/OrderConfirm'
 import OrderSuccess from '@/views/OrderSuccess'
+import OrderList from '@/views/OrderList'
 import GoodDetail from '@/views/GoodDetail'
 
 
@@ -40,5 +41,9 @@ export default new Router({
         path: '/goodDetail',
         name: 'GoodDetail',
         component: GoodDetail
+    }, {
+        path: '/orderList',
+        name: 'OrderList',
+        component: OrderList
     }]
 })
