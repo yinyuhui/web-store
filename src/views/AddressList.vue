@@ -117,44 +117,46 @@
                     <p>你确定要删除这个地址吗？</p>
                 </div>
                 <div slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="onSubmitDelete">确 定</el-button>
                     <el-button @click="onCancelDelete">取 消</el-button>
+                    <el-button type="primary" @click="onSubmitDelete">确 定</el-button>
                 </div>
             </el-dialog>
 
             <el-dialog title="编辑地址" :visible.sync='isEditDialogShow' width="300px">
                 <el-form :label-position="labelPosition" label-width="68px" :model="editAddress">
                     <el-form-item label="收件人">
-                        <el-input v-model="editAddress.userName"></el-input>
+                        <el-input v-model="editAddress.userName" @keyup.enter.native="onSubmitEdit"></el-input>
                     </el-form-item>
                     <el-form-item label="收件地址">
-                        <el-input v-model="editAddress.streetName"></el-input>
+                        <el-input v-model="editAddress.streetName" @keyup.enter.native="onSubmitEdit"></el-input>
                     </el-form-item>
                     <el-form-item label="手机号">
-                        <el-input v-model="editAddress.tel"></el-input>
+                        <el-input v-model="editAddress.tel" @keyup.enter.native="onSubmitEdit"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="onSubmitEdit">确 定</el-button>
                     <el-button @click="onCancelEdit">取 消</el-button>
+                    <el-button type="primary" @click="onSubmitEdit">确 定</el-button>
+
                 </div>
             </el-dialog>
 
             <el-dialog title="新增地址" :visible.sync='isNewDialogShow' width="300px">
                 <el-form :label-position="labelPosition" label-width="68px" :model="newAddress">
                     <el-form-item label="收件人">
-                        <el-input v-model="newAddress.userName"></el-input>
+                        <el-input v-model="newAddress.userName" @keyup.enter.native="onSubmitNew"></el-input>
                     </el-form-item>
                     <el-form-item label="收件地址">
-                        <el-input v-model="newAddress.streetName"></el-input>
+                        <el-input v-model="newAddress.streetName" @keyup.enter.native="onSubmitNew"></el-input>
                     </el-form-item>
                     <el-form-item label="手机号">
-                        <el-input v-model="newAddress.tel"></el-input>
+                        <el-input v-model="newAddress.tel" @keyup.enter.native="onSubmitNew"></el-input>
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="onSubmitNew">确 定</el-button>
                     <el-button @click="onCancelNew">取 消</el-button>
+                    <el-button type="primary" @click="onSubmitNew">确 定</el-button>
+
                 </div>
             </el-dialog>
         </div>
@@ -188,14 +190,10 @@ export default {
 			isEditDialogShow: false,
 			isNewDialogShow: false,
 			addressId: '',
-            selectAddrId: 0,
-            labelPosition: 'right',
-            newAddress: {
-                userName: '',
-                streetName: '',
-                tel: ''
-            },
-            editAddress: {}
+			selectAddrId: 0,
+			labelPosition: 'right',
+			newAddress: {},
+			editAddress: {}
 		}
 	},
 
@@ -233,9 +231,9 @@ export default {
 				.then(() => {
 					this.init()
 				})
-        },
-        
-        // 删除地址按钮
+		},
+
+		// 删除地址按钮
 		onDeleteAddress(addressId) {
 			this.addressId = addressId
 			this.isDeleteDialogShow = true
@@ -263,12 +261,14 @@ export default {
 		// 编辑地址按钮
 		onEditAddress(addressId) {
 			this.addressId = addressId
-            this.isEditDialogShow = true
-            axios.post('/users/addressDetail', {
-                addressId: this.addressId
-            }).then(res => {
-                this.editAddress = res.data.result
-            })
+			this.isEditDialogShow = true
+			axios
+				.post('/users/addressDetail', {
+					addressId: this.addressId
+				})
+				.then(res => {
+					this.editAddress = res.data.result
+				})
 		},
 
 		// 取消编辑地址
@@ -283,16 +283,17 @@ export default {
 					addressId: this.addressId,
 					userName: this.editAddress.userName,
 					streetName: this.editAddress.streetName,
-					tel: this.editAddress.tel,
+					tel: this.editAddress.tel
 				})
 				.then(res => {
 					if (res.data.status === '0') {
 						this.isEditDialogShow = false
+						this.editAddress = {}
 						this.init()
 					}
 				})
-        },
-        
+		},
+
 		// 新增地址按钮
 		addNewAddress() {
 			// this.addressId = addressId
@@ -307,12 +308,16 @@ export default {
 		// 确认新增地址
 		onSubmitNew() {
 			axios
-				.post('/users/addressDel', {
-					// addressId: this.addressId
+				.post('/users/addNewAddress', {
+					userName: this.newAddress.userName,
+					streetName: this.newAddress.streetName,
+					tel: this.newAddress.tel
 				})
 				.then(res => {
 					if (res.data.status === '0') {
+						console.log(res.data.result)
 						this.isNewDialogShow = false
+						this.newAddress = {}
 						this.init()
 					}
 				})
