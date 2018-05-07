@@ -310,7 +310,9 @@ router.post('/payment', (req, res, next) => {
         orderTotal = req.body.orderTotal,
         addressId = req.body.addressId
 
-    User.findOne({ userId: userId }, (err, doc) => {
+    User.findOne({
+        userId: userId
+    }, (err, doc) => {
         if (err) {
             res.json({
                 status: '1',
@@ -321,11 +323,13 @@ router.post('/payment', (req, res, next) => {
             let address = ''
 
             // 获取用户地址信息
-            doc.addressList.forEach((item) => {
-                if (addressId === item.addressId) {
-                    address = item
-                }
-            })
+            if (doc.addressList.length > 0) {
+                doc.addressList.forEach((item) => {
+                    if (addressId === item.addressId) {
+                        address = item
+                    }
+                })
+            }
 
             let goodsList = []
 
@@ -373,6 +377,48 @@ router.post('/payment', (req, res, next) => {
                     })
                 }
             })
+        }
+    })
+})
+
+// 根据订单 ID 查询订单信息
+router.get('/orderDetail', (req, res, next) => {
+    let userId = req.cookies.userId,
+        orderId = req.query.orderId
+
+    User.findOne({
+        userId: userId
+    }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message,
+                result: ''
+            })
+        } else {
+            let orderList = doc.orderList
+            if (orderList.length > 0) {
+                let orderTotal = 0
+                orderList.forEach(item => {
+                    if (item.orderId === orderId) {
+                        orderTotal = item.orderTotal
+                    }
+                })
+                res.json({
+                    status: '0',
+                    msg: '',
+                    result: {
+                        orderTotal: orderTotal,
+                        orderId: orderId
+                    }
+                })
+            } else {
+                res.json({
+                    status: '1003',
+                    msg: '无此订单',
+                    result: ''
+                })
+            }
         }
     })
 })
