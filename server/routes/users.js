@@ -423,4 +423,88 @@ router.get('/orderDetail', (req, res, next) => {
     })
 })
 
+// 根据地址 ID 查询地址信息
+router.post('/addressDetail', (req, res, next) => {
+    let userId = req.cookies.userId,
+        addressId = req.body.addressId
+
+    User.findOne({
+        userId: userId
+    }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message,
+                result: ''
+            })
+        } else {
+            let addressList = doc.addressList
+            console.log(addressList)
+            if (addressList.length > 0) {
+                // let orderTotal = 0
+                let userName = '',
+                    tel = '',
+                    streetName = ''
+
+                addressList.forEach(item => {
+                    if (item.addressId === addressId) {
+                        userName = item.userName
+                        tel = item.tel
+                        streetName = item.streetName
+                    }
+                })
+                res.json({
+                    status: '0',
+                    msg: '',
+                    result: {
+                        userName: userName,
+                        tel: tel,
+                        streetName: streetName
+                    }
+                })
+            } else {
+                res.json({
+                    status: '1004',
+                    msg: '无此地址',
+                    result: ''
+                })
+            }
+        }
+    })
+})
+
+
+// 编辑地址
+router.post('/addressEdit', (req, res, next) => {
+    let userId = req.cookies.userId,
+        addressId = req.body.addressId,
+        userName = req.body.userName,
+        tel = req.body.tel,
+        streetName = req.body.streetName
+
+    User.update({
+        'userId': userId,
+        'addressList.addressId': addressId
+    }, {
+        'addressList.$.addressId': addressId,
+        'addressList.$.userName': userName,
+        'addressList.$.tel': tel,
+        'addressList.$.streetName': streetName,
+    }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message,
+                result: ''
+            })
+        } else {
+            res.json({
+                status: '0',
+                msg: '',
+                result: 'success'
+            })
+        }
+    })
+})
+
 module.exports = router;
