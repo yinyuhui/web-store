@@ -218,7 +218,7 @@ export default {
                     this.$router.push({
                         path: '/orderSuccess',
                         query: {
-                            orderId: res.data.orderId
+                            orderId: res.data.result.orderId
                         }
                     })
                 }
