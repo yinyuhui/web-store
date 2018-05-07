@@ -111,7 +111,7 @@ export default {
 
     // 订单列表页
     goOrderList(){
-      this.$router.push({path:'/orderSuccess'})
+      this.$router.push({path:'/orderList'})
     },
 
     // 地址列表页

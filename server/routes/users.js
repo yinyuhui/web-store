@@ -308,8 +308,10 @@ router.post('/addressDel', (req, res, next) => {
 router.post('/payment', (req, res, next) => {
     let userId = req.cookies.userId,
         orderTotal = req.body.orderTotal,
-        addressId = req.body.addressId
-
+        addressId = req.body.addressId,
+        shipping = req.body.shipping,
+        discount = req.body.discount,
+        tax = req.body.tax
     User.findOne({
         userId: userId
     }, (err, doc) => {
@@ -347,14 +349,16 @@ router.post('/payment', (req, res, next) => {
             let platform = '682'
             let orderId = platform + r1 + sysDate + r2
 
-
             let order = {
                 orderId: orderId,
                 orderTotal: orderTotal,
                 addressInfo: address,
                 goodsList: goodsList,
                 orderStatus: '1',
-                createDate: createDate
+                createDate: createDate,
+                shipping: shipping,
+                discount: discount,
+                tax: tax
             }
 
             doc.orderList.push(order)
@@ -555,6 +559,28 @@ router.post('/addNewAddress', (req, res, next) => {
                         }
                     })
                 }
+            })
+        }
+    })
+})
+
+// 查询用户订单信息
+router.get('/orderList', (req, res, next) => {
+    let userId = req.cookies.userId
+
+    User.findOne({
+        userId: userId
+    }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message
+            })
+        } else {
+            res.json({
+                status: '0',
+                msg: '',
+                result: doc.orderList
             })
         }
     })
