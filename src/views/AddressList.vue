@@ -11,6 +11,9 @@
 	display: none;
 }
 
+.addr-list li .addr-del {
+	width: 42px;
+}
 </style>
 <template>
     <div>
@@ -56,12 +59,12 @@
             <div class="container">
                 <div class="checkout-addr">
 
-                    <!-- address list -->
                     <div class="page-title-normal checkout-title">
                         <h2>
                             <span>地址管理</span>
                         </h2>
                     </div>
+
                     <div class="addr-list-wrap">
                         <div class="addr-list">
                             <ul>
@@ -71,26 +74,24 @@
                                         <dd class="address">{{item.streetName}}</dd>
                                         <dd class="tel">{{item.tel}}</dd>
                                     </dl>
+
                                     <div class="addr-opration addr-del">
-                                        <a href="javascript:;" class="addr-del-btn" @click="onDeleteAddress(item.addressId)">
-                                            <svg class="icon icon-del">
-                                                <use xlink:href="#icon-del"></use>
-                                            </svg>
-                                        </a>
+                                        <i class="el-icon-edit" @click="onEditAddress(item.addressId)"></i>
+                                        <i class=" el-icon-delete " @click="onDeleteAddress(item.addressId) "></i>
                                     </div>
-                                    <div class="addr-opration addr-set-default">
-                                        <a href="javascript:;" class="addr-set-default-btn" v-if="!item.isDefault" @click="setDefaultAddress(item.addressId)">
+                                    <div class="addr-opration addr-set-default ">
+                                        <a href="javascript:; " class="addr-set-default-btn " v-if="!item.isDefault " @click="setDefaultAddress(item.addressId) ">
                                             <i>设为默认地址</i>
                                         </a>
                                     </div>
-                                    <div class="addr-opration addr-default" v-if="item.isDefault">默认地址</div>
+                                    <div class="addr-opration addr-default " v-if="item.isDefault ">默认地址</div>
                                 </li>
 
-                                <li class="addr-new">
-                                    <div class="add-new-inner">
-                                        <i class="icon-add">
-                                            <svg class="icon icon-add">
-                                                <use xlink:href="#icon-add"></use>
+                                <li class="addr-new " @click="addNewAddress">
+                                    <div class="add-new-inner ">
+                                        <i class="icon-add ">
+                                            <svg class="icon icon-add ">
+                                                <use xlink:href="#icon-add "></use>
                                             </svg>
                                         </i>
                                         <p>新增地址</p>
@@ -99,7 +100,7 @@
                             </ul>
                         </div>
 
-                        <div class="shipping-addr-more" @click="showMoreAddress" :class="{'hidden': limit > addressList.length}">
+                        <div class="shipping-addr-more " @click="showMoreAddress " :class="{ 'hidden': limit> addressList.length}">
                             <a class="addr-more-btn up-down-btn" href="javascript:;" :class="{'open': limit > 3}">
                                 更多
                                 <i class="i-up-down">
@@ -111,13 +112,49 @@
                     </div>
                 </div>
             </div>
-            <el-dialog :visible.sync='isDeleteDialogShow' width="300px">
+            <el-dialog title="删除地址" :visible.sync='isDeleteDialogShow' width="300px">
                 <div>
                     <p>你确定要删除这个地址吗？</p>
                 </div>
                 <div slot="footer" class="dialog-footer">
                     <el-button type="primary" @click="onSubmitDelete">确 定</el-button>
                     <el-button @click="onCancelDelete">取 消</el-button>
+                </div>
+            </el-dialog>
+
+            <el-dialog title="编辑地址" :visible.sync='isEditDialogShow' width="300px">
+                <el-form :label-position="labelPosition" label-width="68px" :model="editAddress">
+                    <el-form-item label="收件人">
+                        <el-input v-model="editAddress.userName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="收件地址">
+                        <el-input v-model="editAddress.streetName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="手机号">
+                        <el-input v-model="editAddress.tel"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="onSubmitEdit">确 定</el-button>
+                    <el-button @click="onCancelEdit">取 消</el-button>
+                </div>
+            </el-dialog>
+
+            <el-dialog title="新增地址" :visible.sync='isNewDialogShow' width="300px">
+                <el-form :label-position="labelPosition" label-width="68px" :model="newAddress">
+                    <el-form-item label="收件人">
+                        <el-input v-model="newAddress.userName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="收件地址">
+                        <el-input v-model="newAddress.streetName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="手机号">
+                        <el-input v-model="newAddress.tel"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="onSubmitNew">确 定</el-button>
+                    <el-button @click="onCancelNew">取 消</el-button>
                 </div>
             </el-dialog>
         </div>
@@ -148,8 +185,17 @@ export default {
 			limit: 3, // 最多显示四条地址，多的通过more展开
 			checkIndex: 0, // 点击为当前地址，可能不是默认
 			isDeleteDialogShow: false,
+			isEditDialogShow: false,
+			isNewDialogShow: false,
 			addressId: '',
-			selectAddrId: 0
+            selectAddrId: 0,
+            labelPosition: 'right',
+            newAddress: {
+                userName: '',
+                streetName: '',
+                tel: ''
+            },
+            editAddress: {}
 		}
 	},
 
@@ -168,11 +214,6 @@ export default {
 			axios.get('/users/addressList').then(res => {
 				this.addressList = res.data.result
 				this.selectAddrId = this.addressList[0].addressId
-				// this.addressList.forEach(item => {
-				//     if(item.isDefault === true){
-				//         this.selectAddrId = item.addressId
-				//     }
-				// })
 			})
 		},
 
@@ -192,6 +233,12 @@ export default {
 				.then(() => {
 					this.init()
 				})
+        },
+        
+        // 删除地址按钮
+		onDeleteAddress(addressId) {
+			this.addressId = addressId
+			this.isDeleteDialogShow = true
 		},
 
 		// 取消删除地址
@@ -213,15 +260,62 @@ export default {
 				})
 		},
 
-		// 删除地址按钮
-		onDeleteAddress(addressId) {
+		// 编辑地址按钮
+		onEditAddress(addressId) {
 			this.addressId = addressId
-			this.isDeleteDialogShow = true
+            this.isEditDialogShow = true
+            axios.post('/users/addressDetail', {
+                addressId: this.addressId
+            }).then(res => {
+                this.editAddress = res.data.result
+            })
 		},
 
-		// 跳到点击下一步查看订单页
-		goToOrderConfirm(addressId) {
-			this.$router.push({ path: '/orderConfirm', query: { addressId: this.selectAddrId } })
+		// 取消编辑地址
+		onCancelEdit() {
+			this.isEditDialogShow = false
+		},
+
+		// 确认编辑地址
+		onSubmitEdit() {
+			axios
+				.post('/users/addressEdit', {
+					addressId: this.addressId,
+					userName: this.editAddress.userName,
+					streetName: this.editAddress.streetName,
+					tel: this.editAddress.tel,
+				})
+				.then(res => {
+					if (res.data.status === '0') {
+						this.isEditDialogShow = false
+						this.init()
+					}
+				})
+        },
+        
+		// 新增地址按钮
+		addNewAddress() {
+			// this.addressId = addressId
+			this.isNewDialogShow = true
+		},
+
+		// 取消新增地址
+		onCancelNew() {
+			this.isNewDialogShow = false
+		},
+
+		// 确认新增地址
+		onSubmitNew() {
+			axios
+				.post('/users/addressDel', {
+					// addressId: this.addressId
+				})
+				.then(res => {
+					if (res.data.status === '0') {
+						this.isNewDialogShow = false
+						this.init()
+					}
+				})
 		}
 	}
 }
