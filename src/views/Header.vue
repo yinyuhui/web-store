@@ -11,8 +11,8 @@
 	margin-left: 1px;
 }
 
-.pointer{
-  cursor: pointer;
+.pointer {
+	cursor: pointer;
 }
 </style>
 
@@ -48,14 +48,16 @@
             </el-dropdown-menu>
           </el-dropdown>
 
-          <div class="navbar-cart-container">
-            <span class="navbar-cart-count"></span>
-            <a class="navbar-link navbar-cart-link" href="javascript:void(0)" @click="goCart">
-              <svg class="navbar-cart-logo">
-                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
-              </svg>
-            </a>
-          </div>
+          <el-badge :value="cartLength" class="item">
+            <div class="navbar-cart-container" v-if="name">
+              <span class="navbar-cart-count"></span>
+              <a class="navbar-link navbar-cart-link" href="javascript:void(0)" @click="goCart">
+                <svg class="navbar-cart-logo">
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
+                </svg>
+              </a>
+            </div>
+          </el-badge>
         </div>
 
         <!-- 登录弹窗 -->
@@ -88,40 +90,49 @@ export default {
 			userPwd: '',
 			dialogFormVisible: false,
 			errorTip: false,
-			name: ''
+			name: '',
+			cartLength: 0
 		}
 	},
 	mounted() {
 		this.checkLogin()
+
+		// 获取购物车中商品数量
+		axios.get('/users/cartList').then(res => {
+			console.log(res.data.result)
+			res.data.result.forEach(item => {
+				this.cartLength += parseInt(item.productNum)
+			})
+			// this.cartLength = res.data.result.length
+		})
 	},
 	methods: {
+		// 下拉菜单点击处理
+		handleCommand(command) {
+			if (command === 'logout') {
+				this.logout()
+			}
+			if (command === 'order') {
+				this.goOrderList()
+			}
+			if (command === 'address') {
+				this.goAddressList()
+			}
+		},
 
-    // 下拉菜单点击处理
-    handleCommand(command){
-      if(command === 'logout'){
-        this.logout()
-      }
-      if(command === 'order'){
-        this.goOrderList()
-      }
-      if(command === 'address'){
-        this.goAddressList()
-      }
-    },
+		// 订单列表页
+		goOrderList() {
+			this.$router.push({ path: '/orderList' })
+		},
 
-    // 订单列表页
-    goOrderList(){
-      this.$router.push({path:'/orderList'})
-    },
+		// 地址列表页
+		goAddressList() {
+			this.$router.push({ path: '/addressList' })
+		},
 
-    // 地址列表页
-    goAddressList(){
-      this.$router.push({path:'/addressList'})
-    },
-
-    goCart(){
-      this.$router.push({path:'/cart'})
-    },
+		goCart() {
+			this.$router.push({ path: '/cart' })
+		},
 
 		// 验证一小时内是否登录了
 		checkLogin() {

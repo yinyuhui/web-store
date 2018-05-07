@@ -1,9 +1,5 @@
 <style>
 @media only screen and (max-width: 767px) {
-	.footer__wrap {
-		display: none;
-	}
-
 	.cart-foot-wrap .item-total {
 		font-size: 1.4rem;
 		margin: 0 8px 0 0;
@@ -66,7 +62,12 @@
 }
 
 .box-card {
-	width: 480px;
+	width: 100%;
+	margin-bottom: 12px;
+}
+
+.icons{
+    font-size: 1.5rem
 }
 </style>
 
@@ -113,13 +114,17 @@
                     </h2>
                 </div>
                 <div class="item-list-wrap">
-                    <el-card class="box-card">
+                    <el-card class="box-card" v-for="item in orderList" :key="item.orderId">
                         <div slot="header" class="clearfix">
-                            <span>卡片名称</span>
-                            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+                            <span>订单号：{{item.orderId}}</span>
+                            <i class=" el-icon-delete icons" style="float: right; padding: 3px 0" @click="deleteOrder(item.orderId) "></i>
+                            <i class="el-icon-view icons" style="float: right; padding: 3px 0; margin:0 10px" @click="deleteOrder(item.orderId) "></i>
                         </div>
-                        <div v-for="o in 4" :key="o" class="text item">
-                            {{'列表内容 ' + o }}
+                        <div class="text item">
+                            <p class="text item">商品数量：{{item.goodsList.length}} 件</p>
+                            <p class="text item">收货人：{{item.addressInfo.userName}}</p>
+                            <p class="text item">收货地址：{{item.addressInfo.streetName}}</p>
+                            <p class="text item">创建时间：{{item.createDate}}</p>
                         </div>
                     </el-card>
                 </div>
@@ -127,7 +132,7 @@
             </div>
             <el-dialog :visible.sync='isDeleteDialogShow' width="300px">
                 <div>
-                    <p>你确定要删除这个商品吗？</p>
+                    <p>你确定要删除这个订单吗？</p>
                 </div>
                 <div slot="footer" class="dialog-footer">
                     <el-button type="primary" @click="onSubmitDelete">确 定</el-button>
@@ -162,7 +167,7 @@ export default {
 			orderId: ''
 		}
 	},
-		
+
 	mounted() {
 		this.init()
 	},
@@ -171,27 +176,27 @@ export default {
 		// 页面初始化
 		init() {
 			axios.get('/users/orderList').then(res => {
-				this.orderList = res.data.result
-				   console.log(this.orderList)
+				this.orderList = res.data.result.reverse()
+				console.log(this.orderList)
 			})
 		},
 
 		// 删除按钮
-		onDelete(productId) {
-			this.productId = productId
+		deleteOrder(orderId) {
+			this.orderId = orderId
 			this.isDeleteDialogShow = true
 		},
 
-		// 取消删除商品
+		// 取消删除订单
 		onCancelDelete() {
 			this.isDeleteDialogShow = false
 		},
 
-		// 确认删除商品
+		// 确认删除订单
 		onSubmitDelete() {
 			axios
-				.post('/users/cartDel', {
-					productId: this.productId
+				.post('/users/orderDel', {
+					orderId: this.orderId
 				})
 				.then(res => {
 					if (res.data.status === '0') {
@@ -199,7 +204,7 @@ export default {
 						this.init()
 					}
 				})
-		},
+		}
 	}
 }
 </script>

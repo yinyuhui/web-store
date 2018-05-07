@@ -12,7 +12,8 @@
 }
 
 .addr-list li .addr-del {
-	width: 42px;
+	width: 44px;
+    font-size: 1.5rem
 }
 </style>
 <template>
