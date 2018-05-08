@@ -187,18 +187,14 @@ router.post('/addCart', (req, res, next) => {
 
 // 获取Token
 router.get('/getToken', (req, res, next) => {
-    // console.log(111)
     let accessKey = 'qTESawHglN2ERpMchILr8Rq7XztdDk09jkwFz19r'
     let secretKey = 'BMXGIpNOF51rAnnvBK7h43ojgD0cn379qjpWkIuv'
-        // console.log(222)
     let mac = new qiniu.auth.digest.Mac(accessKey, secretKey)
     let bucket = 'blog'
-    console.log(mac)
     let options = {
         scope: bucket,
         expires: 72000000000
     }
-    console.log(options)
     let putPolicy = new qiniu.rs.PutPolicy(options)
     let uploadToken = putPolicy.uploadToken(mac);
     res.json({
@@ -210,4 +206,30 @@ router.get('/getToken', (req, res, next) => {
     })
 })
 
+
+// 新增商品
+router.post('/addProduct', (req, res, next) => {
+    let obj = {
+        productName: req.body.productName,
+        describe: req.body.describe,
+        salePrice: req.body.salePrice,
+        productImage: req.body.productImage,
+        productId: '' + new Date().Format('yyyyMMddhhmmss')
+    }
+
+    Goods.create(obj, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                mag: err.message
+            })
+        } else {
+            res.json({
+                status: '0',
+                msg: '',
+                result: 'success'
+            })
+        }
+    })
+})
 module.exports = router;
