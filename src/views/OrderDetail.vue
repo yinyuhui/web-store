@@ -176,6 +176,7 @@
 				</div>
 			</el-dialog>
 		</div>
+
 		<nav-footer></nav-footer>
 	</div>
 </template>
@@ -201,8 +202,7 @@ export default {
 			orderDetail: {},
 			isDeleteDialogShow: false,
 			goodsList: [],
-			addressInfo: {}
-			// orderId: ''
+			addressInfo: {},
 		}
 	},
 

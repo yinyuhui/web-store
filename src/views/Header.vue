@@ -42,6 +42,7 @@
               <!-- <i class="el-icon-arrow-down el-icon--right"></i> -->
             </span>
             <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="product">商品管理</el-dropdown-item>
               <el-dropdown-item command="order">订单列表</el-dropdown-item>
               <el-dropdown-item command="address">地址管理</el-dropdown-item>
               <el-dropdown-item command="logout" divided @click="logout">退出</el-dropdown-item>
@@ -118,11 +119,19 @@ export default {
 			if (command === 'address') {
 				this.goAddressList()
 			}
+			if (command === 'product') {
+				this.goEditProduct()
+			}
 		},
 
 		// 订单列表页
 		goOrderList() {
 			this.$router.push({ path: '/orderList' })
+		},
+
+		// 商品管理页
+		goEditProduct() {
+			this.$router.push({ path: '/addProduct' })
 		},
 
 		// 地址列表页

@@ -9,6 +9,7 @@ import OrderSuccess from '@/views/OrderSuccess'
 import OrderList from '@/views/OrderList'
 import OrderDetail from '@/views/OrderDetail'
 import GoodDetail from '@/views/GoodDetail'
+import AddProduct from '@/views/AddProduct'
 
 
 Vue.use(Router)
@@ -50,5 +51,9 @@ export default new Router({
         path: '/orderDetail',
         name: 'OrderDetail',
         component: OrderDetail
+    }, {
+        path: '/addProduct',
+        name: 'AddProduct',
+        component: AddProduct
     }]
 })
