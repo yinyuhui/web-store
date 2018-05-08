@@ -141,9 +141,9 @@ export default {
 		// 图片成功传到七牛上
 		handleAvatarSuccess(res, file) {
 			this.imageUrl = 'http://p04f9mqe1.bkt.clouddn.com/' + res.key
-			console.log(this.imageUrl)
+			// console.log(this.imageUrl)
 			this.formData.productImage = res.key
-			console.log(this.formData.productImage)
+			// console.log(this.formData.productImage)
 		},
 
 		// 图片上传之前
@@ -171,10 +171,18 @@ export default {
 
 		// 点击表单确认，提交表单
 		submitForm() {
-			console.log(this.formData)
-			axios.post('/goods/addProduct', this.formData).then(res => {
-				console.log(res.data)
-			})
+			// console.log(this.formData)
+			axios
+				.post('/goods/addProduct', {
+					productName: this.formData.productName,
+					describe: this.formData.describe,
+					salePrice: this.formData.salePrice,
+					productImage: this.formData.productImage
+				})
+				// .post('/goods/addProduct', this.formData)
+				.then(res => {
+					// console.log(res.data)
+				})
 		},
 
 		// 确定删除商品信息
