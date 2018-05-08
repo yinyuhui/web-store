@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose')
 var Goods = require('../models/goods')
+let qiniu = require('qiniu')
 
 // 连接MongoDB数据库
 mongoose.connect('mongodb://127.0.0.1:27017/webstore')
@@ -79,7 +80,9 @@ router.get('/list', function(req, res, next) {
     let goodsModel = Goods.find(params).skip(skip).limit(pageSize)
 
     if (sort === '1' || sort === '-1') {
-        goodsModel.sort({ 'salePrice': sort })
+        goodsModel.sort({
+            'salePrice': sort
+        })
     }
 
     goodsModel.exec((err, doc) => {
@@ -145,7 +148,9 @@ router.post('/addCart', (req, res, next) => {
                         }
                     })
                 } else { // 否则新增
-                    Goods.findOne({ productId: productId }, (err1, doc) => {
+                    Goods.findOne({
+                        productId: productId
+                    }, (err1, doc) => {
                         if (err1) {
                             res.json({
                                 status: '1',
@@ -175,6 +180,32 @@ router.post('/addCart', (req, res, next) => {
                     })
                 }
             }
+        }
+    })
+})
+
+
+// 获取Token
+router.get('/getToken', (req, res, next) => {
+    // console.log(111)
+    let accessKey = 'qTESawHglN2ERpMchILr8Rq7XztdDk09jkwFz19r'
+    let secretKey = 'BMXGIpNOF51rAnnvBK7h43ojgD0cn379qjpWkIuv'
+        // console.log(222)
+    let mac = new qiniu.auth.digest.Mac(accessKey, secretKey)
+    let bucket = 'blog'
+    console.log(mac)
+    let options = {
+        scope: bucket,
+        expires: 72000000000
+    }
+    console.log(options)
+    let putPolicy = new qiniu.rs.PutPolicy(options)
+    let uploadToken = putPolicy.uploadToken(mac);
+    res.json({
+        status: '0',
+        msg: '',
+        result: {
+            uploadToken: uploadToken
         }
     })
 })
