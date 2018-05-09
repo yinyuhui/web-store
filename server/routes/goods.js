@@ -107,7 +107,7 @@ router.get('/list', function(req, res, next) {
 
 // 加入购物车
 router.post('/addCart', (req, res, next) => {
-    let userId = 'user0001',
+    let userId = req.cookies.userId,
         productId = req.body.productId,
         User = require('../models/user')
 
@@ -240,6 +240,48 @@ router.get('/productList', function(req, res, next) {
             res.json({
                 status: '1',
                 mag: err.message
+            })
+        } else {
+            res.json({
+                status: '0',
+                msg: '',
+                result: doc
+            })
+        }
+    })
+})
+
+// 删除商品
+router.post('/productDel', (req, res, next) => {
+    let productId = req.body.productId
+    Goods.remove({
+        productId: productId
+    }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message,
+                result: ''
+            })
+        } else {
+            res.json({
+                status: '0',
+                msg: '',
+                result: 'success'
+            })
+        }
+    })
+})
+
+// 根据商品ID查找商品
+router.post('/productDetail', (req, res, next) => {
+    let productId = req.body.productId
+    Goods.findOne({ productId: productId }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message,
+                result: ''
             })
         } else {
             res.json({
