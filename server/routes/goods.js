@@ -232,4 +232,22 @@ router.post('/addProduct', (req, res, next) => {
         }
     })
 })
+
+// 得到所有商品信息
+router.get('/productList', function(req, res, next) {
+    Goods.find({}, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                mag: err.message
+            })
+        } else {
+            res.json({
+                status: '0',
+                msg: '',
+                result: doc
+            })
+        }
+    })
+})
 module.exports = router;
