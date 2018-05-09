@@ -11,9 +11,10 @@
 <template>
     <div>
       <nav-header></nav-header>
-      <nav-bread>
+      <!-- <nav-bread>
         <span>商品列表</span>
-      </nav-bread>
+      </nav-bread> -->
+      <nav-menu :activeIndex="'1'"></nav-menu>
       <div class="accessory-result-page accessory-page">
         <div class="container">
           <div class="filter-nav">
@@ -103,9 +104,10 @@ import './../assets/css/base.css'
 import './../assets/css/product.css'
 import './../assets/css/login.css'
 import './../assets/css/checkout.css'
-import NavHeader from './Header'
-import NavFooter from './Footer'
-import NavBread from './Bread'
+import NavHeader from './../components/Header'
+import NavFooter from './../components/Footer'
+import NavBread from './../components/Bread'
+import NavMenu from './../components/Menu'
 import axios from 'axios'
 
     export default{
@@ -159,7 +161,8 @@ import axios from 'axios'
         components: {
           NavHeader,
           NavFooter,
-          NavBread
+          NavBread,
+          NavMenu
         },
 
         mounted: function() {

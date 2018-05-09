@@ -42,12 +42,15 @@
 		<!-- <nav-bread>
 			<span>商品管理</span>
 		</nav-bread> -->
-		<nav-menu :activeIndex="'2-1'"></nav-menu>
+		<nav-menu :activeIndex="'2-2'"></nav-menu>
 
 		<div class="product-form">
 			<el-card class="box-card">
-				<div slot="header" class="clearfix">
-					<span>新增商品</span>
+				<div slot="header" class="clearfix fz16">
+					<el-button icon="el-icon-arrow-left" circle style="padding: 5px;" @click="goBack"></el-button>
+					<span> 编辑商品</span>
+
+					<el-button type="danger" icon="el-icon-delete" circle style="float: right; padding: 5px;" @click="deleteProduct(productId) "></el-button>
 				</div>
 				<el-form :label-position="labelPosition" label-width="80px" :model="formData">
 					<el-form-item label="商品名">
@@ -67,11 +70,21 @@
 						</el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button @click="cancelAdd">取消</el-button>
+						<el-button @click="cancelEdit">取消</el-button>
 						<el-button type="primary" @click="submitForm">确认</el-button>
 					</el-form-item>
 				</el-form>
 			</el-card>
+
+			<el-dialog :visible.sync='isDeleteDialogShow' width="300px">
+				<div>
+					<p>你确定要删除这个商品吗？</p>
+				</div>
+				<div slot="footer" class="dialog-footer">
+					<el-button type="primary" @click="onSubmitDelete">确 定</el-button>
+					<el-button @click="onCancelDelete">取 消</el-button>
+				</div>
+			</el-dialog>
 
 			<el-dialog :visible.sync='tip' width="300px">
 				<div>
@@ -83,6 +96,8 @@
 				</div>
 			</el-dialog>
 		</div>
+
+		<!-- action="https://jsonplaceholder.typicode.com/photos/"  -->
 
 		<nav-footer></nav-footer>
 	</div>
@@ -121,17 +136,33 @@ export default {
 				key: '',
 				token: ''
 			},
+			isDeleteDialogShow: false,
 			tip: false,
+			productId: ''
 		}
 	},
 	mounted() {
 		this.getToken()
+		this.productId = this.$route.query.productId
+		this.init()
+		console.log(this.imageUrl)
 	},
 	methods: {
+		init() {
+			axios.post('/goods/productDetail', { productId: this.productId }).then(res => {
+				this.formData.productName = res.data.result.productName
+				this.formData.describe = res.data.result.describe
+				this.formData.salePrice = res.data.result.salePrice
+				this.formData.productImage = res.data.result.productImage
+				this.imageUrl = 'http://p04f9mqe1.bkt.clouddn.com/' + res.data.result.productImage
+			})
+		},
+
 		// 图片成功传到七牛上
 		handleAvatarSuccess(res, file) {
 			this.imageUrl = 'http://p04f9mqe1.bkt.clouddn.com/' + res.key
 			this.formData.productImage = res.key
+			console.log(this.formData.productImage)
 		},
 
 		// 图片上传之前
@@ -147,42 +178,73 @@ export default {
 			})
 		},
 
-		// 取消新增商品
-		cancelAdd() {
-			this.formData= {
+		// 取消按钮 取消编辑商品
+		cancelEdit() {
+			this.formData = {
 				productName: '',
 				describe: '',
 				salePrice: ''
-			},
-			this.imageUrl= '',
+			}
+			this.imageUrl = ''
 			this.formData.productImage = ''
 		},
 
 		// 点击表单确认，提交表单
 		submitForm() {
+			// console.log(this.formData)
 			axios
-				.post('/goods/addProduct', {
+				.post('/goods/editProduct', {
+					productId: this.productId,
 					productName: this.formData.productName,
 					describe: this.formData.describe,
 					salePrice: this.formData.salePrice,
 					productImage: this.formData.productImage
 				})
-				// .post('/goods/addProduct', this.formData)
+				// .post('/goods/editProduct', this.formData)
 				.then(res => {
-					this.formData = {
-						productName: '',
-						describe: '',
-						salePrice: '',
-						productImage: ''
-					}
-					this.imageUrl = ''
+					// this.formData = {
+					// 	productName: '',
+					// 	describe: '',
+					// 	salePrice: '',
+					// 	productImage: ''
+					// }
+					// this.imageUrl = ''
 					this.tip = true
 				})
+		},
+
+		// 确认删除商品
+		onSubmitDelete() {
+			axios
+				.post('/goods/productDel', {
+					productId: this.productId
+				})
+				.then(res => {
+					if (res.data.status === '0') {
+						this.isDeleteDialogShow = false
+						this.init()
+					}
+				})
+		},
+
+		// 删除按钮
+		deleteProduct() {
+			this.isDeleteDialogShow = true
+		},
+
+		// 弹出框点取消
+		onCancelDelete() {
+			this.isDeleteDialogShow = false
 		},
 
 		// 去管理商品页面
 		goList() {
 			this.$router.push('/editProduct')
+		},
+
+		// 后退
+		goBack(){
+			this.$router.go(-1)
 		}
 	}
 }

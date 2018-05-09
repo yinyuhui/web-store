@@ -160,15 +160,17 @@ import './../assets/css/base.css'
 import './../assets/css/product.css'
 import './../assets/css/login.css'
 import './../assets/css/checkout.css'
-import NavHeader from './Header'
-import NavFooter from './Footer'
-import NavBread from './Bread'
+import NavHeader from './../components/Header'
+import NavFooter from './../components/Footer'
+import NavBread from './../components/Bread'
+import NavMenu from './../components/Menu'
 import axios from 'axios'
 export default {
 	components: {
 		NavHeader,
 		NavFooter,
-		NavBread
+        NavBread,
+        NavMenu
 	},
 
 	data() {

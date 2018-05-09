@@ -42,7 +42,8 @@
               <!-- <i class="el-icon-arrow-down el-icon--right"></i> -->
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="product">商品管理</el-dropdown-item>
+              <el-dropdown-item command="editProduct">商品管理</el-dropdown-item>
+              <el-dropdown-item command="addProduct">新增商品</el-dropdown-item>
               <el-dropdown-item command="order">订单列表</el-dropdown-item>
               <el-dropdown-item command="address">地址管理</el-dropdown-item>
               <el-dropdown-item command="logout" divided @click="logout">退出</el-dropdown-item>
@@ -88,7 +89,7 @@ export default {
 		return {
 			form: {},
 			userName: 'user01',
-			userPwd: '',
+			userPwd: '123456',
 			dialogFormVisible: false,
 			errorTip: false,
 			name: '',
@@ -119,7 +120,10 @@ export default {
 			if (command === 'address') {
 				this.goAddressList()
 			}
-			if (command === 'product') {
+			if (command === 'addProduct') {
+				this.goAddProduct()
+			}
+			if (command === 'editProduct') {
 				this.goEditProduct()
 			}
 		},
@@ -130,8 +134,13 @@ export default {
 		},
 
 		// 商品管理页
-		goEditProduct() {
+		goAddProduct() {
 			this.$router.push({ path: '/addProduct' })
+		},
+
+		// 商品管理页
+		goEditProduct() {
+			this.$router.push({ path: '/editProduct' })
 		},
 
 		// 地址列表页
@@ -163,6 +172,7 @@ export default {
 			axios.post('/users/logout').then(res => {
 				if (res.data.status === '0') {
 					this.name = ''
+					this.$router.push('/')
 				}
 			})
 		},

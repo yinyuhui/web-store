@@ -14,10 +14,10 @@
 <template>
     <div>
         <nav-header></nav-header>
-        <nav-bread>
+        <!-- <nav-bread>
             <span>收货地址</span>
-        </nav-bread>
-
+        </nav-bread> -->
+<nav-menu :activeIndex="'0'"></nav-menu>
         <div class="checkout-page">
             <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <defs>
@@ -103,7 +103,7 @@
                                     <div class="addr-opration addr-default" v-if="item.isDefault">默认地址</div>
                                 </li>
 
-                                <li class="addr-new">
+                                <li class="addr-new" @click="addNewAddress">
                                     <div class="add-new-inner">
                                         <i class="icon-add">
                                             <svg class="icon icon-add">
@@ -160,6 +160,25 @@
                     <el-button @click="onCancelDelete">取 消</el-button>
                 </div>
             </el-dialog>
+
+            <el-dialog title="新增地址" :visible.sync='isNewDialogShow' width="300px">
+                <el-form :label-position="labelPosition" label-width="68px" :model="newAddress">
+                    <el-form-item label="收件人">
+                        <el-input v-model="newAddress.userName" @keyup.enter.native="onSubmitNew"></el-input>
+                    </el-form-item>
+                    <el-form-item label="收件地址">
+                        <el-input v-model="newAddress.streetName" @keyup.enter.native="onSubmitNew"></el-input>
+                    </el-form-item>
+                    <el-form-item label="手机号">
+                        <el-input v-model="newAddress.tel" @keyup.enter.native="onSubmitNew"></el-input>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="onCancelNew">取 消</el-button>
+                    <el-button type="primary" @click="onSubmitNew">确 定</el-button>
+
+                </div>
+            </el-dialog>
         </div>
         <nav-footer></nav-footer>
     </div>
@@ -170,16 +189,18 @@ import './../assets/css/base.css'
 import './../assets/css/product.css'
 import './../assets/css/login.css'
 import './../assets/css/checkout.css'
-import NavHeader from './Header'
-import NavFooter from './Footer'
-import NavBread from './Bread'
+import NavHeader from './../components/Header'
+import NavFooter from './../components/Footer'
+import NavBread from './../components/Bread'
+import NavMenu from './../components/Menu'
 import axios from 'axios'
 
 export default {
 	components: {
 		NavHeader,
 		NavFooter,
-		NavBread
+        NavBread,
+        NavMenu
 	},
 
 	data() {
@@ -189,7 +210,10 @@ export default {
 			checkIndex: 0, // 点击为当前地址，可能不是默认
 			isDeleteDialogShow: false,
 			addressId: '',
-			selectAddrId: 0
+            selectAddrId: 0,
+            isNewDialogShow: false,
+            newAddress:{},
+            labelPosition: 'right',
 		}
 	},
 
@@ -262,6 +286,35 @@ export default {
 		// 跳到点击下一步查看订单页
 		goToOrderConfirm(addressId) {
 			this.$router.push({ path: '/orderConfirm', query: { addressId: this.selectAddrId } })
+        },
+
+        // 新增地址按钮
+		addNewAddress() {
+			// this.addressId = addressId
+			this.isNewDialogShow = true
+		},
+
+		// 取消新增地址
+		onCancelNew() {
+			this.isNewDialogShow = false
+		},
+        
+        // 确认新增地址
+		onSubmitNew() {
+			axios
+				.post('/users/addNewAddress', {
+					userName: this.newAddress.userName,
+					streetName: this.newAddress.streetName,
+					tel: this.newAddress.tel
+				})
+				.then(res => {
+					if (res.data.status === '0') {
+						console.log(res.data.result)
+						this.isNewDialogShow = false
+						this.newAddress = {}
+						this.init()
+					}
+				})
 		}
 	}
 }

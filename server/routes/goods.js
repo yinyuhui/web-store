@@ -276,7 +276,9 @@ router.post('/productDel', (req, res, next) => {
 // 根据商品ID查找商品
 router.post('/productDetail', (req, res, next) => {
     let productId = req.body.productId
-    Goods.findOne({ productId: productId }, (err, doc) => {
+    Goods.findOne({
+        productId: productId
+    }, (err, doc) => {
         if (err) {
             res.json({
                 status: '1',
@@ -291,5 +293,39 @@ router.post('/productDetail', (req, res, next) => {
             })
         }
     })
+})
+
+// 编辑商品
+router.post('/editProduct', (req, res, next) => {
+    let productId = req.body.productId,
+        productName = req.body.productName,
+        describe = req.body.describe,
+        salePrice = req.body.salePrice,
+        productImage = req.body.productImage
+
+    Goods.update({
+        productId: productId
+    }, {
+        productId: productId,
+        productName: productName,
+        describe: describe,
+        salePrice: salePrice,
+        productImage: productImage
+    }, (err, num) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message,
+                result: ''
+            })
+        } else {
+            res.json({
+                status: '0',
+                msg: '',
+                result: num
+            })
+        }
+    })
+
 })
 module.exports = router;

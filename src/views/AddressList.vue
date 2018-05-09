@@ -19,10 +19,10 @@
 <template>
     <div>
         <nav-header></nav-header>
-        <nav-bread>
+        <!-- <nav-bread>
             <span>地址管理</span>
-        </nav-bread>
-
+        </nav-bread> -->
+<nav-menu :activeIndex="'4'"></nav-menu>
         <div class="checkout-page">
             <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                 <defs>
@@ -170,16 +170,18 @@ import './../assets/css/base.css'
 import './../assets/css/product.css'
 import './../assets/css/login.css'
 import './../assets/css/checkout.css'
-import NavHeader from './Header'
-import NavFooter from './Footer'
-import NavBread from './Bread'
+import NavHeader from './../components/Header'
+import NavFooter from './../components/Footer'
+import NavBread from './../components/Bread'
+import NavMenu from './../components/Menu'
 import axios from 'axios'
 
 export default {
 	components: {
 		NavHeader,
 		NavFooter,
-		NavBread
+		NavBread,
+		NavMenu
 	},
 
 	data() {

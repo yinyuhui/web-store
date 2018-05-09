@@ -1309,3 +1309,19 @@ html {
 .fz16 {
     font-size: 16px
 }
+
+.fleft {
+    float: left;
+}
+
+.fright {
+    float: right;
+}
+
+.margin30 {
+    margin: 30px;
+}
+
+.marginr16 {
+    margin-right: 16px;
+}

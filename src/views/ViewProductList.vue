@@ -70,16 +70,18 @@
 	font-size: 1.5rem;
 }
 
-.solid-thread {
-	border-bottom: solid #eee 1px;
-	margin-bottom: 18px;
+/* .el-card__body {
+	padding: 20px 0;
+} */
+
+.pic img{
+	width: 120px;
+	position: relative;
+    top: -20px;
 }
-.dashed-thread {
-	border-bottom: dashed #eee 1px;
-	margin-bottom: 18px;
-}
-.bold {
-	font-weight: 600;
+
+.ceee{
+	color: #999;
 }
 </style>
 
@@ -87,9 +89,12 @@
 	<div>
 		<nav-header></nav-header>
 		<!-- <nav-bread>
-			<span>订单详情</span>
-		</nav-bread> -->
-		<nav-menu :activeIndex="'3'"></nav-menu>
+            <span>订单列表</span>
+        </nav-bread> -->
+		<nav-menu :activeIndex="'2-2'"></nav-menu>
+
+		<div class="line"></div>
+
 		<svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 			<defs>
 				<symbol id="icon-add" viewBox="0 0 32 32">
@@ -122,46 +127,29 @@
 			<div class="cart">
 				<div class="page-title-normal">
 					<h2 class="page-title-h2">
-						<span>订单详情</span>
+						<span>编辑商品</span>
 					</h2>
 				</div>
 				<div class="item-list-wrap">
-					<el-card class="box-card">
+					<el-card class="box-card" v-for="item in goodsList" :key="item.productId">
 						<div slot="header" class="clearfix fz16">
-							<el-button icon="el-icon-arrow-left" circle style="padding: 5px;" @click="goBack"></el-button>
-							<span>订单号：{{orderDetail.orderId}}</span>
-							<el-button type="danger" icon="el-icon-delete" circle style="float: right; padding: 5px;"  @click="deleteOrder"></el-button>
+							<span>商品 ID： {{item.productId}}</span>
+							<el-button type="danger" icon="el-icon-delete" circle style="float: right; padding: 5px;" @click="deleteOrder(item.productId) "></el-button>
+							<el-button type="primary" icon="el-icon-edit" circle  style="float: right; padding: 5px; margin:0 10px" @click="goOrderDetail(item.productId) "></el-button>
 						</div>
 						<div class="text item">
-							<!-- 商品信息 -->
-							<p class="text item  bold">商品信息：{{goodsList.length}} 条</p>
-							<div class="solid-thread"></div>
-							<div v-for="item in goodsList" :key="item.productId">
-								<p class="text item">商品名：{{item.productName}}</p>
-								<p class="text item">数量：{{item.productNum}}</p>
-								<p class="text item">售价：{{item.salePrice | currency('￥')}}</p>
-								<p class="text item">合计：{{item.salePrice * item.productNum | currency('￥')}}</p>
-								<div class="dashed-thread"></div>
+							<div class="fleft marginr16">
+								<div class="pic">
+									<img :src="'http://p04f9mqe1.bkt.clouddn.com/' + item.productImage" alt="">
+								</div>
+
 							</div>
-							<br>
+							<div class="fleft">
+								<p class="text item">{{item.productName}}</p>
+								<p class="text item ceee">{{item.salePrice | currency('￥')}}</p>
+								<p class="text item">{{item.describe}}</p>
+							</div>
 
-							<p class="text item bold">收货信息</p>
-							<div class="solid-thread"></div>
-							<p class="text item">收货人：{{addressInfo.userName}}</p>
-							<p class="text item">联系方式：{{addressInfo.tel }}
-							</p>
-							<p class="text item">收货地址：{{addressInfo.streetName}}</p>
-							<div class="dashed-thread"></div>
-							<br>
-
-							<p class="text item bold">订单信息</p>
-							<div class="solid-thread"></div>
-							<!-- <p class="text item">商品售价总计：{{}}</p> -->
-							<p class="text item">运费：{{orderDetail.shipping | currency('￥')}}</p>
-							<p class="text item">税额：{{orderDetail.tax | currency('￥')}}</p>
-							<p class="text item">折扣：-{{orderDetail.discount | currency('￥')}}</p>
-							<p class="text item">实付：{{orderDetail.orderTotal | currency('￥')}}</p>
-							<p class="text item">订单创建时间：{{orderDetail.createDate}}</p>
 						</div>
 					</el-card>
 				</div>
@@ -169,7 +157,7 @@
 			</div>
 			<el-dialog :visible.sync='isDeleteDialogShow' width="300px">
 				<div>
-					<p>你确定要删除这个订单吗？</p>
+					<p>你确定要删除这件商品吗？</p>
 				</div>
 				<div slot="footer" class="dialog-footer">
 					<el-button type="primary" @click="onSubmitDelete">确 定</el-button>
@@ -177,7 +165,6 @@
 				</div>
 			</el-dialog>
 		</div>
-
 		<nav-footer></nav-footer>
 	</div>
 </template>
@@ -202,10 +189,9 @@ export default {
 
 	data() {
 		return {
-			orderDetail: {},
-			isDeleteDialogShow: false,
 			goodsList: [],
-			addressInfo: {}
+			isDeleteDialogShow: false,
+			productId: ''
 		}
 	},
 
@@ -216,48 +202,46 @@ export default {
 	methods: {
 		// 页面初始化
 		init() {
-			let orderId = this.$route.query.orderId
-			if (!orderId) {
-				return
-			}
-			axios.get('/users/orderDetail', { params: { orderId: orderId } }).then(res => {
-				if (res.data.status === '0') {
-					this.orderDetail = res.data.result.orderDetail
-					this.goodsList = this.orderDetail.goodsList
-					this.addressInfo = this.orderDetail.addressInfo
-					console.log(res.data)
-				}
+			axios.get('/goods//productList').then(res => {
+				this.goodsList = res.data.result
 			})
 		},
 
 		// 删除按钮
-		deleteOrder() {
+		deleteOrder(productId) {
+			this.productId = productId
 			this.isDeleteDialogShow = true
 		},
 
-		// 取消删除订单
+		// 取消删除商品
 		onCancelDelete() {
 			this.isDeleteDialogShow = false
 		},
 
-		// 确认删除订单
+		// 确认删除商品
 		onSubmitDelete() {
 			axios
-				.post('/users/orderDel', {
-					orderId: this.orderDetail.orderId
+				.post('/goods/productDel', {
+					productId: this.productId
 				})
 				.then(res => {
 					if (res.data.status === '0') {
 						this.isDeleteDialogShow = false
-						this.$router.push('/orderList')
+						this.init()
 					}
 				})
 		},
 
-		// 后退
-		goBack(){
-			this.$router.go(-1)
-		}
+		// 查看商品详情
+		goOrderDetail(productId) {
+			// console.log(productId)
+			this.$router.push({
+				path: '/editGood',
+				query: {
+					productId: productId
+				}
+			})
+		},
 	}
 }
 </script>
