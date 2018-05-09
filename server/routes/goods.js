@@ -20,17 +20,17 @@ mongoose.connection.on('disconnected', () => {
 })
 
 // 查询商品列表数据
-router.get('/list', function(req, res, next) {
-    let page = parseInt(req.query.page),
-        pageSize = parseInt(req.query.pageSize),
-        sort = req.query.sort,
+router.post('/list', function(req, res, next) {
+    let page = parseInt(req.body.page),
+        pageSize = parseInt(req.body.pageSize),
+        sort = req.body.sort,
+        classify = req.body.classify,
         skip = (page - 1) * pageSize,
-        priceLevel = req.query.priceLevel,
+        priceLevel = req.body.priceLevel,
         priceGt = 0,
         priceLte = 5000,
         params = {}
-
-    // if (priceLevel !== 'all') {
+        // console.log(classify)
     switch (priceLevel) {
         case '0':
             {
@@ -69,14 +69,24 @@ router.get('/list', function(req, res, next) {
                 break
             }
     }
-    params = {
+    if (classify !== 'all') {
+        params = {
+            salePrice: {
+                $gt: priceGt,
+                $lte: priceLte
+            },
+            classify: classify
+        }
+    } else {
+        params = {
             salePrice: {
                 $gt: priceGt,
                 $lte: priceLte
             }
         }
-        // }
+    }
 
+    // console.log(params)
     let goodsModel = Goods.find(params).skip(skip).limit(pageSize)
 
     if (sort === '1' || sort === '-1') {

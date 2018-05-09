@@ -76,7 +76,7 @@
 						</el-select>
 					</el-form-item>
 					<el-form-item>
-						<el-button @click="cancelEdit">取消</el-button>
+						<el-button @click="goList">取消</el-button>
 						<el-button type="primary" @click="submitForm">确认</el-button>
 					</el-form-item>
 				</el-form>
@@ -203,17 +203,18 @@ export default {
 			})
 		},
 
-		// 取消按钮 取消编辑商品
-		cancelEdit() {
-			this.formData = {
-				productName: '',
-				describe: '',
-				salePrice: '',
-				classify:''
-			}
-			this.imageUrl = ''
-			this.formData.productImage = ''
-		},
+		// 取消按钮 取消编辑商品 
+		// 编辑时取消不能置空，直接返回列表
+		// cancelEdit() {
+		// 	this.formData = {
+		// 		productName: '',
+		// 		describe: '',
+		// 		salePrice: '',
+		// 		classify:''
+		// 	}
+		// 	this.imageUrl = ''
+		// 	this.formData.productImage = ''
+		// },
 
 		// 点击表单确认，提交表单
 		submitForm() {
