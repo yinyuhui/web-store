@@ -62,8 +62,10 @@
 }
 
 .box-card {
-	width: 100%;
+	width: 400px;
+	margin-right: 12px;
 	margin-bottom: 12px;
+	display: inline-block;
 }
 
 .icons {
@@ -76,6 +78,7 @@
 
 .pic img{
 	width: 120px;
+	height: 120px;
 	position: relative;
     top: -20px;
 }
@@ -131,7 +134,7 @@
 					</h2>
 				</div>
 				<div class="item-list-wrap">
-					<el-card class="box-card" v-for="item in goodsList" :key="item.productId">
+					<el-card class="box-card" shadow="hover" v-for="item in goodsList" :key="item.productId">
 						<div slot="header" class="clearfix fz16">
 							<span>商品 ID： {{item.productId}}</span>
 							<el-button type="danger" icon="el-icon-delete" circle style="float: right; padding: 5px;" @click="deleteOrder(item.productId) "></el-button>
@@ -147,7 +150,7 @@
 							<div class="fleft">
 								<p class="text item">{{item.productName}}</p>
 								<p class="text item ceee">{{item.salePrice | currency('￥')}}</p>
-								<p class="text item">{{item.describe}}</p>
+								<!-- <p class="text item">{{item.describe}}</p> -->
 							</div>
 
 						</div>
@@ -155,7 +158,7 @@
 				</div>
 
 			</div>
-			<el-dialog :visible.sync='isDeleteDialogShow' width="300px">
+			<el-dialog :visible.sync='isDeleteDialogShow'>
 				<div>
 					<p>你确定要删除这件商品吗？</p>
 				</div>

@@ -214,7 +214,9 @@ router.post('/addProduct', (req, res, next) => {
         describe: req.body.describe,
         salePrice: req.body.salePrice,
         productImage: req.body.productImage,
+        classify: req.body.classify,
         productId: '' + new Date().Format('yyyyMMddhhmmss')
+
     }
 
     Goods.create(obj, (err, doc) => {
@@ -301,6 +303,7 @@ router.post('/editProduct', (req, res, next) => {
         productName = req.body.productName,
         describe = req.body.describe,
         salePrice = req.body.salePrice,
+        classify = req.body.classify,
         productImage = req.body.productImage
 
     Goods.update({
@@ -310,6 +313,7 @@ router.post('/editProduct', (req, res, next) => {
         productName: productName,
         describe: describe,
         salePrice: salePrice,
+        classify: classify,
         productImage: productImage
     }, (err, num) => {
         if (err) {

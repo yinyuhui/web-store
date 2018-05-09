@@ -49,22 +49,28 @@
 				<div slot="header" class="clearfix">
 					<span>新增商品</span>
 				</div>
-				<el-form :label-position="labelPosition" label-width="80px" :model="formData">
+				<el-form :label-position="labelPosition" label-width="100px" :model="formData">
 					<el-form-item label="商品名">
 						<el-input v-model="formData.productName" class="width680"></el-input>
 					</el-form-item>
 					<el-form-item label="售价">
 						<el-input v-model.number="formData.salePrice" class="width680"></el-input>
 					</el-form-item>
-					<el-form-item label="商品图片">
+					<el-form-item label="图片">
 						<el-upload class="avatar-uploader" action="http://upload.qiniu.com" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :data="form" :show-file-list="false">
 							<img v-if="imageUrl" :src="imageUrl" class="avatar">
 							<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 						</el-upload>
 					</el-form-item>
-					<el-form-item label="商品描述">
+					<el-form-item label="描述">
 						<el-input class="width680" type="textarea" :autosize="{ minRows: 2, maxRows: 6}" placeholder="请输入商品描述" v-model="formData.describe">
 						</el-input>
+					</el-form-item>
+					<el-form-item label="所属分类">
+						<el-select v-model="formData.classify" placeholder="请选择商品分类">
+							<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+							</el-option>
+						</el-select>
 					</el-form-item>
 					<el-form-item>
 						<el-button @click="cancelAdd">取消</el-button>
@@ -73,7 +79,7 @@
 				</el-form>
 			</el-card>
 
-			<el-dialog :visible.sync='tip' width="300px">
+			<el-dialog :visible.sync='tip'>
 				<div>
 					<p>提交成功</p>
 				</div>
@@ -113,7 +119,8 @@ export default {
 			formData: {
 				productName: '',
 				describe: '',
-				salePrice: ''
+				salePrice: '',
+				classify:''
 			},
 			imageUrl: '',
 			uploadToken: '',
@@ -122,6 +129,22 @@ export default {
 				token: ''
 			},
 			tip: false,
+			options:[{
+				value: 'phone',
+				label: '手机'
+			},{
+				value: 'computer',
+				label: '笔记本'
+			},{
+				value: 'headset',
+				label: '耳机'
+			},{
+				value: 'soundBox',
+				label: '音箱'
+			},{
+				value: 'other',
+				label: '其他'
+			}],
 		}
 	},
 	mounted() {
@@ -152,7 +175,8 @@ export default {
 			this.formData= {
 				productName: '',
 				describe: '',
-				salePrice: ''
+				salePrice: '',
+				classify:''
 			},
 			this.imageUrl= '',
 			this.formData.productImage = ''
@@ -165,7 +189,8 @@ export default {
 					productName: this.formData.productName,
 					describe: this.formData.describe,
 					salePrice: this.formData.salePrice,
-					productImage: this.formData.productImage
+					productImage: this.formData.productImage,
+					classify: this.formData.classify
 				})
 				// .post('/goods/addProduct', this.formData)
 				.then(res => {
@@ -173,7 +198,8 @@ export default {
 						productName: '',
 						describe: '',
 						salePrice: '',
-						productImage: ''
+						productImage: '',
+						classify:''
 					}
 					this.imageUrl = ''
 					this.tip = true

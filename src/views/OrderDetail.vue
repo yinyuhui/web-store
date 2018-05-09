@@ -167,7 +167,7 @@
 				</div>
 
 			</div>
-			<el-dialog :visible.sync='isDeleteDialogShow' width="300px">
+			<el-dialog :visible.sync='isDeleteDialogShow'>
 				<div>
 					<p>你确定要删除这个订单吗？</p>
 				</div>

@@ -63,7 +63,7 @@
         </div>
 
         <!-- 登录弹窗 -->
-        <el-dialog title="登录" :visible.sync='dialogFormVisible' width="300px">
+        <el-dialog title="登录" :visible.sync='dialogFormVisible'>
           <div class="errorTip" v-show="errorTip">
             <p>
               <i class="el-icon-error"> </i> 用户名/密码为空或错误</p>

@@ -113,7 +113,7 @@
                     </div>
                 </div>
             </div>
-            <el-dialog title="删除地址" :visible.sync='isDeleteDialogShow' width="300px">
+            <el-dialog title="删除地址" :visible.sync='isDeleteDialogShow'>
                 <div>
                     <p>你确定要删除这个地址吗？</p>
                 </div>
@@ -123,8 +123,8 @@
                 </div>
             </el-dialog>
 
-            <el-dialog title="编辑地址" :visible.sync='isEditDialogShow' width="300px">
-                <el-form :label-position="labelPosition" label-width="68px" :model="editAddress">
+            <el-dialog title="编辑地址" :visible.sync='isEditDialogShow'>
+                <el-form :label-position="labelPosition" label-width="100px" :model="editAddress">
                     <el-form-item label="收件人">
                         <el-input v-model="editAddress.userName" @keyup.enter.native="onSubmitEdit"></el-input>
                     </el-form-item>
@@ -142,8 +142,8 @@
                 </div>
             </el-dialog>
 
-            <el-dialog title="新增地址" :visible.sync='isNewDialogShow' width="300px">
-                <el-form :label-position="labelPosition" label-width="68px" :model="newAddress">
+            <el-dialog title="新增地址" :visible.sync='isNewDialogShow'>
+                <el-form :label-position="labelPosition" label-width="100px" :model="newAddress">
                     <el-form-item label="收件人">
                         <el-input v-model="newAddress.userName" @keyup.enter.native="onSubmitNew"></el-input>
                     </el-form-item>
