@@ -81,6 +81,10 @@
 .bold {
 	font-weight: 600;
 }
+.image {
+	width: 120px;
+	height: 120px;
+}
 </style>
 
 <template>
@@ -130,37 +134,72 @@
 						<div slot="header" class="clearfix fz16">
 							<el-button icon="el-icon-arrow-left" circle style="padding: 5px;" @click="goBack"></el-button>
 							<span>订单号：{{orderDetail.orderId}}</span>
-							<el-button type="danger" icon="el-icon-delete" circle style="float: right; padding: 5px;"  @click="deleteOrder"></el-button>
+							<el-button type="danger" icon="el-icon-delete" circle style="float: right; padding: 5px;" @click="deleteOrder"></el-button>
 						</div>
 						<div class="text item">
 							<!-- 商品信息 -->
 							<p class="text item  bold">商品信息：{{goodsList.length}} 条</p>
 							<div class="solid-thread"></div>
 							<div v-for="item in goodsList" :key="item.productId">
-								<p class="text item">商品名：{{item.productName}}</p>
-								<p class="text item">数量：{{item.productNum}}</p>
-								<p class="text item">售价：{{item.salePrice | currency('￥')}}</p>
-								<p class="text item">合计：{{item.salePrice * item.productNum | currency('￥')}}</p>
+								<el-row :gutter="20">
+									<el-col :span="5">
+										<div class="image">
+											<img class="image" :src="'http://p04f9mqe1.bkt.clouddn.com/'+item.productImage" :alt="item.productName">
+										</div>
+									</el-col>
+									<el-col :span="5">
+										<div>
+											<br><br>
+											<p class="text item">{{item.productName}}</p>
+											<p class="text item">{{item.salePrice | currency('￥')}}</p>
+										</div>
+									</el-col>
+									<el-col :span="5">
+										<div>
+											<br><br>
+											<p class="text item">× {{item.productNum}}</p>
+											<p class="text item">{{item.salePrice * item.productNum | currency('￥')}}</p>
+										</div>
+									</el-col>
+								</el-row>
+
 								<div class="dashed-thread"></div>
 							</div>
 							<br>
-
+							
 							<p class="text item bold">收货信息</p>
 							<div class="solid-thread"></div>
-							<p class="text item">收货人：{{addressInfo.userName}}</p>
-							<p class="text item">联系方式：{{addressInfo.tel }}
-							</p>
-							<p class="text item">收货地址：{{addressInfo.streetName}}</p>
+							<el-row :gutter="20"  class="text item">
+								<el-col :span="5">
+									{{addressInfo.userName}}
+								</el-col>
+								<el-col :span="5">
+									{{addressInfo.tel}}
+								</el-col>
+								<el-col :span="5">
+									{{addressInfo.streetName}}
+								</el-col>
+							</el-row>
 							<div class="dashed-thread"></div>
 							<br>
 
 							<p class="text item bold">订单信息</p>
 							<div class="solid-thread"></div>
-							<!-- <p class="text item">商品售价总计：{{}}</p> -->
-							<p class="text item">运费：{{orderDetail.shipping | currency('￥')}}</p>
-							<p class="text item">税额：{{orderDetail.tax | currency('￥')}}</p>
-							<p class="text item">折扣：-{{orderDetail.discount | currency('￥')}}</p>
-							<p class="text item">实付：{{orderDetail.orderTotal | currency('￥')}}</p>
+							<el-row :gutter="20"  class="text item">
+								<el-col :span="5">
+									运费：{{orderDetail.shipping | currency('￥')}}
+								</el-col>
+								<el-col :span="5">
+									税额：{{orderDetail.tax | currency('￥')}}
+								</el-col>
+								<el-col :span="5">
+									折扣：-{{orderDetail.discount | currency('￥')}}
+								</el-col>
+								<el-col :span="5">
+									实付：{{orderDetail.orderTotal | currency('￥')}}
+								</el-col>
+							</el-row>
+							<br><br>
 							<p class="text item">订单创建时间：{{orderDetail.createDate}}</p>
 						</div>
 					</el-card>
@@ -255,7 +294,7 @@ export default {
 		},
 
 		// 后退
-		goBack(){
+		goBack() {
 			this.$router.go(-1)
 		}
 	}
