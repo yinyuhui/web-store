@@ -46,6 +46,25 @@
 .marginr8 {
 	margin-right: 8px;
 }
+
+.filter-nav {
+	position: relative;
+	top: 0;
+	left: 0;
+}
+
+.el-dropdown {
+	position: absolute;
+	top: 0;
+	left: 192px;
+}
+
+.el-input {
+	width: 150px;
+	position: absolute;
+	top: 0;
+	left: 20px;
+}
 </style>
 
 <template>
@@ -70,6 +89,9 @@
 							<el-dropdown-item command="other">其他</el-dropdown-item>
 						</el-dropdown-menu>
 					</el-dropdown>
+
+					<el-input placeholder="输入后回车搜索" prefix-icon="el-icon-search" v-model="params.name" size="small" @keyup.enter.native="searchName">
+					</el-input>
 
 					<a href="javascript:void(0)" class="default" :class="{'cur': defaultFlag}" @click="defaultSort">综合排序</a>
 					<a href="javascript:void(0)" class="price" :class="{'cur': !defaultFlag}" @click="sortGoods">
@@ -202,8 +224,9 @@ export default {
 			sortFlag: true,
 			params: {
 				page: 1,
-				pageSize: 8,
-				classify: 'all'
+				pageSize: 6,
+				classify: 'all',
+				name: ''
 			},
 			defaultFlag: true,
 			busy: false,
@@ -229,9 +252,8 @@ export default {
 	},
 
 	methods: {
-		// 选择商品分类时触发
-		handleCommand(classify) {
-			// console.log(classify)
+		// 商品分类标题赋值
+		setClassify(classify) {
 			switch (classify) {
 				case 'phone': {
 					this.selectClassify = '手机'
@@ -258,10 +280,28 @@ export default {
 					break
 				}
 			}
+		},
+
+		// 输入商品名 点击时触发
+		searchName() {
+			this.setClassify('all')
+			this.params.priceLevel = this.priceChecked
+			this.params.page = 1
+			this.params.classify = 'all'
+			this.params.sort = this.defaultFlag ? '' : this.sortFlag ? '1' : '-1'
+			// console.log(this.params)
+			this.getGoodsList()
+		},
+
+		// 选择商品分类时触发
+		handleCommand(classify) {
+			// console.log(classify)
+			this.setClassify(classify)
 			this.classify = classify
 			this.params = {
+				name: '',
 				page: 1,
-				pageSize: 8,
+				pageSize: 6,
 				classify: this.classify,
 				sort: this.defaultFlag ? '' : this.sortFlag ? '1' : '-1',
 				priceLevel: this.priceChecked
@@ -323,7 +363,7 @@ export default {
 			this.defaultFlag = true
 			this.params = {
 				page: 1,
-				pageSize: 8,
+				pageSize: 6,
 				classify: this.classify,
 				priceLevel: this.priceChecked
 			}

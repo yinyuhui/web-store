@@ -29,8 +29,10 @@ router.post('/list', function(req, res, next) {
         priceLevel = req.body.priceLevel,
         priceGt = 0,
         priceLte = 5000,
-        params = {}
-        // console.log(classify)
+        params = {},
+        name = req.body.name,
+        reg = new RegExp(name, 'i')
+        // console.log(reg)
     switch (priceLevel) {
         case '0':
             {
@@ -75,6 +77,7 @@ router.post('/list', function(req, res, next) {
                 $gt: priceGt,
                 $lte: priceLte
             },
+            productName: { $regex: reg },
             classify: classify
         }
     } else {
@@ -82,7 +85,8 @@ router.post('/list', function(req, res, next) {
             salePrice: {
                 $gt: priceGt,
                 $lte: priceLte
-            }
+            },
+            productName: { $regex: reg }
         }
     }
 
