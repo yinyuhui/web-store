@@ -10,6 +10,33 @@
 .price-count li {
 	font-size: 16px;
 }
+
+.text {
+	font-size: 14px;
+}
+
+.item {
+	margin-bottom: 18px;
+}
+
+.clearfix:before,
+.clearfix:after {
+	display: table;
+	content: '';
+}
+.clearfix:after {
+	clear: both;
+}
+
+.box-card {
+	width: 100%;
+    margin-bottom: 60px;
+}
+
+.red{
+    color: brown;
+    font-size: 16px
+}
 </style>
 <template>
     <div>
@@ -17,7 +44,7 @@
         <!-- <nav-bread>
             <span>订单信息</span>
         </nav-bread> -->
-<nav-menu :activeIndex="'-1'"></nav-menu>
+        <nav-menu :activeIndex="'-1'"></nav-menu>
         <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <defs>
                 <symbol id="icon-add" viewBox="0 0 32 32">
@@ -57,7 +84,7 @@
                             <span>确认</span>地址</li>
                         <li class="cur">
                             <span>核对</span>订单</li>
-                        <li>
+                        <li class="cur">
                             <span>订单</span>支付</li>
                         <li>
                             <span>下单</span>成功</li>
@@ -67,77 +94,87 @@
                 <!-- order list -->
                 <div class="page-title-normal checkout-title">
                     <h2>
-                        <span>订单详情</span>
+                        <span>订单支付</span>
                     </h2>
                 </div>
-                <div class="item-list-wrap confirm-item-list-wrap">
-                    <div class="cart-item order-item">
-                        <div class="cart-item-head">
-                            <ul>
-                                <li>订单内容</li>
-                                <li>单价</li>
-                                <li>数量</li>
-                                <li>合计</li>
-                            </ul>
+                <div>
+                    <el-card class="box-card">
+                        <div slot="header" class="clearfix fz16">
+                            <span>支付详情</span>
+                            <!-- <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button> -->
                         </div>
-                        <ul class="cart-item-list">
-                            <li v-for="item in cartList" :key="item.productId" v-if="item.checked === '1'">
-                                <div class="cart-tab-1">
-                                    <div class="cart-item-pic">
-                                        <img :src="'http://p04f9mqe1.bkt.clouddn.com/'+item.productImage" alt="">
+                        <div class="text item">
+                            <el-row :gutter="20">
+                                <el-col :span="10">
+                                    <div>
+                                        商品总金额
                                     </div>
-                                    <div class="cart-item-title">
-                                        <div class="item-name">{{item.productName}}</div>
+                                </el-col>
+                                <el-col :span="10">
+                                    <div>
+                                        {{ subtotal | currency('￥')}}
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </div>
+                        <div class="text item">
+                            <el-row :gutter="20">
+                                <el-col :span="10">
+                                    <div>
+                                        运费
+                                    </div>
+                                </el-col>
+                                <el-col :span="10">
+                                    <div>
+                                        {{ shipping | currency('￥')}}
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </div>
+                        <div class="text item">
+                            <el-row :gutter="20">
+                                <el-col :span="10">
+                                    <div>
+                                        折扣
+                                    </div>
+                                </el-col>
+                                <el-col :span="10">
+                                    <div>
+                                        {{ discount | currency('￥')}}
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </div>
+                        <div class="text item">
+                            <el-row :gutter="20">
+                                <el-col :span="10">
+                                    <div>
+                                        税额
+                                    </div>
+                                </el-col>
+                                <el-col :span="10">
+                                    <div>
+                                        {{ tax | currency('￥')}}
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </div>
+                        <div class="text item">
+                            <el-row :gutter="20">
+                                <el-col :span="10">
+                                    <div class="fz16">
+                                        实付
+                                    </div>
+                                </el-col>
+                                <el-col :span="10">
+                                    <div class="red">
+                                        {{ total | currency('￥')}}
+                                    </div>
+                                </el-col>
+                            </el-row>
 
-                                    </div>
-                                </div>
-                                <div class="cart-tab-2">
-                                    <div class="item-price">{{item.salePrice}}</div>
-                                </div>
-                                <div class="cart-tab-3">
-                                    <div class="item-quantity">
-                                        <div class="select-self">
-                                            <div class="select-self-area">
-                                                <span class="select-ipt">×{{item.productNum}}</span>
-                                            </div>
-                                        </div>
-                                        <div class="item-stock item-stock-no">有货</div>
-                                    </div>
-                                </div>
-                                <div class="cart-tab-4">
-                                    <div class="item-price-total">{{item.productNum * item.salePrice | currency('￥')}}</div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Price count -->
-                <div class="price-count-wrap">
-                    <div class="price-count">
-                        <ul>
-                            <li>
-                                <span>商品总金额:</span>
-                                <span>{{ subtotal | currency('￥')}}</span>
-                            </li>
-                            <li>
-                                <span>运费:</span>
-                                <span>{{ shipping | currency('￥')}}</span>
-                            </li>
-                            <li>
-                                <span>折扣:</span>
-                                <span>{{ discount | currency('￥')}}</span>
-                            </li>
-                            <li>
-                                <span>税额:</span>
-                                <span>{{ tax | currency('￥')}}</span>
-                            </li>
-                            <li class="order-total-price">
-                                <span>订单总额:</span>
-                                <span>{{ total | currency('￥')}}</span>
-                            </li>
-                        </ul>
-                    </div>
+                        </div>
+                    </el-card>
                 </div>
 
                 <div class="order-foot-wrap">
@@ -145,9 +182,19 @@
                         <button class="btn btn--m" @click="goBack">上一步</button>
                     </div>
                     <div class="next-btn-wrap">
-                        <button class="btn btn--m btn--red" @click="goPayment">去支付订单</button>
+                        <button class="btn btn--m btn--red" @click="isDialogShow=true">支付</button>
                     </div>
                 </div>
+
+                <el-dialog :visible.sync='isDialogShow'>
+				<div>
+					<p>确认支付？</p>
+				</div>
+				<div slot="footer" class="dialog-footer">
+					<el-button type="primary" @click="isDialogShow=false">再想想</el-button>
+					<el-button @click="goPayment">确定</el-button>
+				</div>
+			</el-dialog>
             </div>
         </div>
 
@@ -169,12 +216,13 @@ export default {
 	components: {
 		NavHeader,
 		NavFooter,
-        NavBread,
-        NavMenu
+		NavBread,
+		NavMenu
 	},
 
 	data() {
 		return {
+            isDialogShow:false,
 			cartList: [],
 			isDeleteDialogShow: false,
 			productId: '',
@@ -204,33 +252,32 @@ export default {
 				})
 				this.total = this.subtotal + this.shipping + this.tax - this.discount
 			})
-        },
-        
-        goBack(){
-            this.$router.go(-1)
-        },
+		},
 
-        goPayment(){
-            let addressId = this.$route.query.addressId
-            axios.post('/users/payment', {
-                addressId : addressId,
-                orderTotal: this.total,
-                subtotal: this.subtotal,
-                shipping: this.shipping,
-                discount: this.discount,
-                tax: this.tax,
-                isPay: '0'
-            }).then(res=>{
-                if(res.data.status === '0'){
-                    this.$router.push({
-                        path: '/orderPay',
-                        query: {
-                            orderId: res.data.result.orderId
-                        }
-                    })
-                }
-            })
-        },
+		goBack() {
+			this.$router.go(-1)
+		},
+
+		goPayment() {
+
+            // 把支付标志位改变就可以了 要查找订单修改
+			let orderId = this.$route.query.orderId
+			axios
+				.post('/users/isPay', {
+					orderId: orderId,
+					isPay:'1'
+				})
+				.then(res => {
+					if (res.data.status === '0') {
+						this.$router.push({
+							path: '/orderSuccess',
+							query: {
+								orderId: orderId
+							}
+						})
+					}
+				})
+		}
 	}
 }
 </script>

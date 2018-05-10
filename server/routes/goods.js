@@ -28,7 +28,7 @@ router.post('/list', function(req, res, next) {
         skip = (page - 1) * pageSize,
         priceLevel = req.body.priceLevel,
         priceGt = 0,
-        priceLte = 5000,
+        priceLte = 500000,
         params = {},
         name = req.body.name,
         reg = new RegExp(name, 'i')
@@ -67,7 +67,7 @@ router.post('/list', function(req, res, next) {
         case 'all':
             {
                 priceGt = 0
-                priceLte = 5000
+                priceLte = 500000
                 break
             }
     }

@@ -11,10 +11,10 @@
 <template>
     <div>
         <nav-header></nav-header>
-        <nav-bread>
+        <!-- <nav-bread>
             <span>下单成功</span>
-        </nav-bread>
-
+        </nav-bread> -->
+        <nav-menu :activeIndex="'-1'"></nav-menu>
         <div class="container">
             <div class="page-title-normal">
                 <h2 class="page-title-h2">
@@ -73,8 +73,8 @@ export default {
 	components: {
 		NavHeader,
 		NavFooter,
-        NavBread,
-        NavMenu
+		NavBread,
+		NavMenu
 	},
 
 	data() {
@@ -85,8 +85,8 @@ export default {
 	},
 
 	mounted() {
-        let orderId = this.$route.query.orderId
-        // console.log(orderId)
+		let orderId = this.$route.query.orderId
+		// console.log(orderId)
 		if (!orderId) {
 			return
 		}
@@ -96,17 +96,17 @@ export default {
 				this.orderTotal = res.data.result.orderTotal
 			}
 		})
-    },
-    
-    methods: {
-        goCart(){
-            this.$router.push('/cart')
-        },
+	},
 
-        goGoodsList(){
-            this.$router.push('/')
-        }
-    }
+	methods: {
+		goCart() {
+			this.$router.push('/cart')
+		},
+
+		goGoodsList() {
+			this.$router.push('/')
+		}
+	}
 }
 </script>
 

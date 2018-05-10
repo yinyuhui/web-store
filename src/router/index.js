@@ -12,6 +12,7 @@ import GoodDetail from '@/views/GoodDetail'
 import AddProduct from '@/views/AddProduct'
 import ViewProductList from '@/views/ViewProductList'
 import EditProduct from '@/views/EditProduct'
+import OrderPay from '@/views/OrderPay'
 
 
 Vue.use(Router)
@@ -77,5 +78,10 @@ export default new Router({
         path: '/editGood',
         name: 'EditProduct',
         component: EditProduct
+    }, {
+        // 订单支付    
+        path: '/orderPay',
+        name: 'OrderPay',
+        component: OrderPay
     }]
 })

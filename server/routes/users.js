@@ -311,7 +311,8 @@ router.post('/payment', (req, res, next) => {
         addressId = req.body.addressId,
         shipping = req.body.shipping,
         discount = req.body.discount,
-        tax = req.body.tax
+        tax = req.body.tax,
+        isPay = req.body.isPay
     User.findOne({
         userId: userId
     }, (err, doc) => {
@@ -358,8 +359,11 @@ router.post('/payment', (req, res, next) => {
                 createDate: createDate,
                 shipping: shipping,
                 discount: discount,
-                tax: tax
+                tax: tax,
+                isPay: isPay
             }
+
+            // console.log(order)
 
             doc.orderList.push(order)
 
@@ -376,7 +380,8 @@ router.post('/payment', (req, res, next) => {
                         msg: '',
                         result: {
                             orderId: order.orderId,
-                            orderTotal: order.orderTotal
+                            orderTotal: order.orderTotal,
+                            doc: doc
                         }
                     })
                 }
@@ -601,6 +606,34 @@ router.post('/orderDel', (req, res, next) => {
                 'orderId': orderId
             }
         }
+    }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message,
+                result: ''
+            })
+        } else {
+            res.json({
+                status: '0',
+                msg: '',
+                result: 'success'
+            })
+        }
+    })
+})
+
+// 用户支付
+router.post('/isPay', (req, res, next) => {
+    let userId = req.cookies.userId,
+        orderId = req.body.orderId,
+        isPay = req.body.isPay
+
+    User.update({
+        'userId': userId,
+        'orderList.orderId': orderId
+    }, {
+        'orderList.$.isPay': isPay,
     }, (err, doc) => {
         if (err) {
             res.json({

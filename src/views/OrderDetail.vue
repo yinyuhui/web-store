@@ -225,7 +225,7 @@ export default {
 					this.orderDetail = res.data.result.orderDetail
 					this.goodsList = this.orderDetail.goodsList
 					this.addressInfo = this.orderDetail.addressInfo
-					console.log(res.data)
+					// console.log(res.data)
 				}
 			})
 		},

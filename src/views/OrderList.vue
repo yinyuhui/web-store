@@ -44,6 +44,7 @@
 	min-width: 30px;
 	text-align: center;
 }
+
 .text {
 	font-size: 14px;
 }
@@ -66,8 +67,8 @@
 	margin-bottom: 12px;
 }
 
-.icons{
-    font-size: 1.5rem
+.icons {
+	font-size: 1.5rem;
 }
 </style>
 
@@ -115,19 +116,29 @@
                     </h2>
                 </div>
                 <div class="item-list-wrap">
-                    <el-card class="box-card" v-for="item in orderList" :key="item.orderId">
-                        <div slot="header" class="clearfix fz16">
-                            <span>订单号：{{item.orderId}}</span>
-                            <el-button type="danger" icon="el-icon-delete" circle style="float: right; padding: 5px;" @click="deleteOrder(item.orderId) "></el-button>
-                            <el-button type="primary" icon="el-icon-view" circle style="float: right;margin:0 10px; padding: 5px;"@click="goOrderDetail(item.orderId) "></el-button>
-                        </div>
-                        <div class="text item">
-                            <p class="text item">商品数量：{{item.goodsList.length}} 件</p>
-                            <p class="text item">收货人：{{item.addressInfo.userName}}</p>
-                            <p class="text item">收货地址：{{item.addressInfo.streetName}}</p>
-                            <p class="text item">创建时间：{{item.createDate}}</p>
-                        </div>
-                    </el-card>
+                    
+                    <el-table :data="orderList" stripe border style="width: 100%" center>
+                        <el-table-column type="index" width="80" label="序号">
+                        </el-table-column>
+                        <el-table-column prop="createDate" label="创建时间">
+                        </el-table-column>
+                        <el-table-column prop="orderId" label="订单ID">
+                        </el-table-column>
+                        <el-table-column prop="goodsList.length" label="商品数量">
+                        </el-table-column>
+                        <el-table-column prop="orderList.isPay" label="是否支付">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.isPay === '1'">已支付</span>
+                                <span v-else>未支付</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="操作">
+                            <template slot-scope="scope">
+                                <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteOrder(scope.row.orderId) "></el-button>
+                            <el-button type="primary" icon="el-icon-view" size="mini" @click="goOrderDetail(scope.row.orderId) "></el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
                 </div>
 
             </div>
@@ -159,8 +170,8 @@ export default {
 	components: {
 		NavHeader,
 		NavFooter,
-        NavBread,
-        NavMenu
+		NavBread,
+		NavMenu
 	},
 
 	data() {
@@ -207,17 +218,18 @@ export default {
 						this.init()
 					}
 				})
-        },
-        
-        // 查看订单详情
-        goOrderDetail(orderId){
-            // console.log(orderId)
-            this.$router.push({path: '/orderDetail', 
-                query:{
-                    orderId: orderId
-                }
-            })
-        }
+		},
+
+		// 查看订单详情
+		goOrderDetail(orderId) {
+			// console.log(orderId)
+			this.$router.push({
+				path: '/orderDetail',
+				query: {
+					orderId: orderId
+				}
+			})
+		}
 	}
 }
 </script>
