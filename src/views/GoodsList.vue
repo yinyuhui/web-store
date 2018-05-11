@@ -24,6 +24,7 @@
 
 .image {
 	width: 100%;
+	height: 100%;
 	display: block;
 	cursor: pointer;
 }
@@ -240,7 +241,8 @@ export default {
 			needLogin: false,
 			addSuc: false,
 			selectClassify: '全部分类',
-			classify: 'all'
+			classify: 'all',
+			name:''
 			// index:''
 		}
 	},
@@ -287,8 +289,9 @@ export default {
 			}
 		},
 
-		// 输入商品名 点击时触发
+		// 输入商品名 回车时触发
 		searchName() {
+			this.name = this.params.name
 			this.setClassify('all')
 			this.params.priceLevel = this.priceChecked
 			this.params.page = 1
@@ -303,6 +306,7 @@ export default {
 			// console.log(classify)
 			this.setClassify(classify)
 			this.classify = classify
+			this.name = ''
 			this.params = {
 				name: '',
 				page: 1,
@@ -393,6 +397,7 @@ export default {
 			this.params.page = 1
 			this.params.classify = this.classify
 			this.params.sort = this.defaultFlag ? '' : this.sortFlag ? '1' : '-1'
+			this.params.name = this.name
 			this.getGoodsList()
 			this.closePop()
 		},
