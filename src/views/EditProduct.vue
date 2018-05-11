@@ -187,6 +187,7 @@ export default {
 				this.formData.classify = res.data.result.classify
 				this.formData.productImage = res.data.result.productImage
 				this.imageUrl = 'http://p04f9mqe1.bkt.clouddn.com/' + res.data.result.productImage
+				this.imageUrl1 = 'http://p04f9mqe1.bkt.clouddn.com/' + res.data.result.describeImg
 			})
 		},
 

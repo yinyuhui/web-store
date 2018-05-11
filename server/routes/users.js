@@ -17,7 +17,7 @@ router.post('/login', (req, res, next) => {
         userPwd: req.body.userPwd
     }
 
-    console.log(param)
+    // console.log(param)
 
     // 查询
     User.findOne(param, (err, doc) => {
