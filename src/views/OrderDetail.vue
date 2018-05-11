@@ -144,7 +144,7 @@
 								<el-row :gutter="20">
 									<el-col :span="5">
 										<div class="image">
-											<img class="image" :src="'http://p04f9mqe1.bkt.clouddn.com/'+item.productImage" :alt="item.productName">
+											<img class="image" v-lazy="'http://p04f9mqe1.bkt.clouddn.com/'+item.productImage" :alt="item.productName">
 										</div>
 									</el-col>
 									<el-col :span="5">

@@ -8,13 +8,13 @@
 }
 
 .time {
-	font-size: 13px;
-	color: #999;
+	font-size: 16px;
+	color: #ee7a23;
 }
 
 .bottom {
-	margin-top: 13px;
-	line-height: 12px;
+	margin-top: 20px;
+	line-height: 20px;
 }
 
 .button {
@@ -25,6 +25,7 @@
 .image {
 	width: 100%;
 	display: block;
+	cursor: pointer;
 }
 
 .clearfix:before,
@@ -64,6 +65,10 @@
 	position: absolute;
 	top: 0;
 	left: 20px;
+}
+
+.pointer{
+	cursor: pointer;
 }
 </style>
 
@@ -125,14 +130,14 @@
 							<ul>
 								<li v-for="item in goodsList" :key="item.productId">
 									<el-card :body-style="{ padding: '0px' }" shadow="hover">
-										<img v-lazy="'http://p04f9mqe1.bkt.clouddn.com/'+item.productImage" alt="" class="image">
+										<img v-lazy="'http://p04f9mqe1.bkt.clouddn.com/'+item.productImage" alt="" class="image" @click="goGoodDetail(item.productId)">
 										<div style="padding: 14px; border-top:1px solid #eee">
 											<a href="javascript:;" class="button" @click="addCart(item.productId)">
 												<svg class="navbar-cart-logo">
 													<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
 												</svg>
 											</a>
-											<span>{{item.productName}}</span>
+											<span class="pointer" @click="goGoodDetail(item.productId)">{{item.productName}}</span>
 											<div class="bottom clearfix">
 												<time class="time">{{item.salePrice | currency('￥')}}</time>
 
@@ -411,6 +416,17 @@ export default {
 		handleClose() {
 			this.addSuc = false
 			this.needLogin = false
+		},
+
+		// 进入商品详情页
+		goGoodDetail(productId) {
+			console.log(productId)
+			this.$router.push({
+				path: '/goodDetail',
+				query: {
+					productId: productId
+				}
+			})
 		}
 	}
 }

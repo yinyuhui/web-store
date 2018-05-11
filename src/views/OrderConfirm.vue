@@ -84,7 +84,7 @@
                             <li v-for="item in cartList" :key="item.productId" v-if="item.checked === '1'">
                                 <div class="cart-tab-1">
                                     <div class="cart-item-pic">
-                                        <img :src="'http://p04f9mqe1.bkt.clouddn.com/'+item.productImage" alt="">
+                                        <img v-lazy="'http://p04f9mqe1.bkt.clouddn.com/'+item.productImage" alt="">
                                     </div>
                                     <div class="cart-item-title">
                                         <div class="item-name">{{item.productName}}</div>

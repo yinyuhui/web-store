@@ -143,7 +143,7 @@
 						<div class="text item">
 							<div class="fleft marginr16">
 								<div class="pic">
-									<img :src="'http://p04f9mqe1.bkt.clouddn.com/' + item.productImage" alt="">
+									<img v-lazy="'http://p04f9mqe1.bkt.clouddn.com/' + item.productImage" alt="">
 								</div>
 
 							</div>

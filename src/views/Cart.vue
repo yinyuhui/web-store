@@ -117,7 +117,7 @@
 										</a>
 									</div>
 									<div class="cart-item-pic">
-										<img :src="'http://p04f9mqe1.bkt.clouddn.com/'+item.productImage" :alt="item.productName">
+										<img v-lazy="'http://p04f9mqe1.bkt.clouddn.com/'+item.productImage" :alt="item.productName">
 									</div>
 									<div class="cart-item-title">
 										<div class="item-name">{{item.productName}}</div>
@@ -251,7 +251,7 @@ export default {
 		// 页面初始化
 		init() {
 			axios.get('/users/cartList').then(res => {
-				this.cartList = res.data.result
+				this.cartList = res.data.result.reverse()
 				//    console.log(this.cartList)
 			})
 		},
