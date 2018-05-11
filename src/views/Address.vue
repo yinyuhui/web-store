@@ -309,7 +309,7 @@ export default {
 				})
 				.then(res => {
 					if (res.data.status === '0') {
-						console.log(res.data.result)
+						// console.log(res.data.result)
 						this.isNewDialogShow = false
 						this.newAddress = {}
 						this.init()

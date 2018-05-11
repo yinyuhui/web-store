@@ -26,7 +26,7 @@
 
 .name {
 	font-size: 40px;
-	height: 80px;
+	/* height: 80px; */
 	/* line-height: 80px; */
 	padding-bottom: 40px;
 	border-bottom: 1px solid #dddddd;
@@ -54,6 +54,7 @@
 .describe {
 	font-size: 20px;
 	line-height: 40px;
+	margin-bottom: 40px;
 }
 
 .big-img{
@@ -112,12 +113,12 @@
                 </el-card>
 
                 <el-card class="details">
-                    <div class="name mrg-b40">{{formData.productName}}详情介绍</div>
-                    <div class="describe lnh32">
+                    <div class="name mrg-b40">详情介绍</div>
+                    <div class="describe">
                         {{formData.describe}}
                     </div>
                     <div class="pic">
-                        <img class="big-img" v-lazy="'http://p04f9mqe1.bkt.clouddn.com/'+formData.productImage" :alt="formData.productName">
+                        <img class="big-img" v-lazy="'http://p04f9mqe1.bkt.clouddn.com/'+formData.describeImg" :alt="formData.productName">
                     </div>
                 </el-card>
             </div>

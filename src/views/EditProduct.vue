@@ -59,7 +59,7 @@
 					<el-form-item label="售价">
 						<el-input v-model.number="formData.salePrice" class="width680"></el-input>
 					</el-form-item>
-					<el-form-item label="图片">
+					<el-form-item label="商品图片">
 						<el-upload class="avatar-uploader" action="http://upload.qiniu.com" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" :data="form" :show-file-list="false">
 							<img v-if="imageUrl" :src="imageUrl" class="avatar">
 							<i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -68,6 +68,12 @@
 					<el-form-item label="描述">
 						<el-input class="width680" type="textarea" :autosize="{ minRows: 2, maxRows: 6}" placeholder="请输入商品描述" v-model="formData.describe">
 						</el-input>
+					</el-form-item>
+					<el-form-item label="详情图片">
+						<el-upload class="avatar-uploader" action="http://upload.qiniu.com" :on-success="handleAvatarSuccess1" :before-upload="beforeAvatarUpload" :data="form" :show-file-list="false">
+							<img v-if="imageUrl1" :src="imageUrl1" class="avatar">
+							<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+						</el-upload>
 					</el-form-item>
 					<el-form-item label="所属分类">
 						<el-select v-model="formData.classify" placeholder="请选择商品分类">
@@ -138,6 +144,7 @@ export default {
 				salePrice: ''
 			},
 			imageUrl: '',
+			imageUrl1: '',
 			uploadToken: '',
 			form: {
 				key: '',
@@ -187,7 +194,14 @@ export default {
 		handleAvatarSuccess(res, file) {
 			this.imageUrl = 'http://p04f9mqe1.bkt.clouddn.com/' + res.key
 			this.formData.productImage = res.key
-			console.log(this.formData.productImage)
+			// console.log(this.formData.productImage)
+		},
+
+		// 图片成功传到七牛上
+		handleAvatarSuccess1(res, file) {
+			this.imageUrl1 = 'http://p04f9mqe1.bkt.clouddn.com/' + res.key
+			this.formData.describeImg = res.key
+			// console.log(this.formData.describeImg)
 		},
 
 		// 图片上传之前
@@ -226,6 +240,7 @@ export default {
 					describe: this.formData.describe,
 					salePrice: this.formData.salePrice,
 					productImage: this.formData.productImage,
+					describeImg: this.formData.describeImg,
 					classify: this.formData.classify
 				})
 				// .post('/goods/editProduct', this.formData)
