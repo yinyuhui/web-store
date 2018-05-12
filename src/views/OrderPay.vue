@@ -30,12 +30,12 @@
 
 .box-card {
 	width: 100%;
-    margin-bottom: 60px;
+	margin-bottom: 60px;
 }
 
-.red{
-    color: brown;
-    font-size: 16px
+.red {
+	color: brown;
+	font-size: 16px;
 }
 </style>
 <template>
@@ -182,19 +182,19 @@
                         <button class="btn btn--m" @click="goBack">上一步</button>
                     </div>
                     <div class="next-btn-wrap">
-                        <button class="btn btn--m btn--red" @click="isDialogShow=true">支付</button>
+                        <button class="btn btn--m btn--red" @click="payClick">支付</button>
                     </div>
                 </div>
 
                 <el-dialog :visible.sync='isDialogShow'>
-				<div>
-					<p>确认支付？</p>
-				</div>
-				<div slot="footer" class="dialog-footer">
-					<el-button type="primary" @click="isDialogShow=false">再想想</el-button>
-					<el-button @click="goPayment">确定</el-button>
-				</div>
-			</el-dialog>
+                    <div>
+                        <p>确认支付？</p>
+                    </div>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button type="primary" @click="isDialogShow=false">再想想</el-button>
+                        <el-button @click="goPayment">确定</el-button>
+                    </div>
+                </el-dialog>
             </div>
         </div>
 
@@ -222,7 +222,7 @@ export default {
 
 	data() {
 		return {
-            isDialogShow:false,
+			isDialogShow: false,
 			cartList: [],
 			isDeleteDialogShow: false,
 			productId: '',
@@ -258,14 +258,28 @@ export default {
 			this.$router.go(-1)
 		},
 
-		goPayment() {
+		payClick() {
+            // console.log(this.cartList)
+			this.isDialogShow = true
+			this.cartList.forEach(item => {
+				if (item.checked === '1') {
+					axios
+						.post('/users/cartDel', {
+							productId: item.productId
+						})
+						.then(res => {})
+				}
+			})
+		},
 
-            // 把支付标志位改变就可以了 要查找订单修改
+		goPayment() {
+			// 把支付标志位改变就可以了 要查找订单修改
+			// 同时把Goods集合中对应商品的支付计数增加1
 			let orderId = this.$route.query.orderId
 			axios
 				.post('/users/isPay', {
 					orderId: orderId,
-					isPay:'1'
+					isPay: '1'
 				})
 				.then(res => {
 					if (res.data.status === '0') {
@@ -276,7 +290,18 @@ export default {
 							}
 						})
 					}
-				})
+                })
+            
+            // console.log(this.cartList)
+			this.cartList.forEach(item => {
+				if (item.checked === '1') {
+					axios
+						.post('/goods/setPayNum', {
+							productId: item.productId
+						})
+						.then(res => {})
+				}
+			})
 		}
 	}
 }

@@ -17,7 +17,7 @@
         <!-- <nav-bread>
             <span>订单信息</span>
         </nav-bread> -->
-<nav-menu :activeIndex="'-1'"></nav-menu>
+        <nav-menu :activeIndex="'-1'"></nav-menu>
         <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
             <defs>
                 <symbol id="icon-add" viewBox="0 0 32 32">
@@ -169,8 +169,8 @@ export default {
 	components: {
 		NavHeader,
 		NavFooter,
-        NavBread,
-        NavMenu
+		NavBread,
+		NavMenu
 	},
 
 	data() {
@@ -204,33 +204,37 @@ export default {
 				})
 				this.total = this.subtotal + this.shipping + this.tax - this.discount
 			})
-        },
-        
-        goBack(){
-            this.$router.go(-1)
-        },
+		},
 
-        goPayment(){
-            let addressId = this.$route.query.addressId
-            axios.post('/users/payment', {
-                addressId : addressId,
-                orderTotal: this.total,
-                subtotal: this.subtotal,
-                shipping: this.shipping,
-                discount: this.discount,
-                tax: this.tax,
-                isPay: '0'
-            }).then(res=>{
-                if(res.data.status === '0'){
-                    this.$router.push({
-                        path: '/orderPay',
-                        query: {
-                            orderId: res.data.result.orderId
-                        }
-                    })
-                }
-            })
-        },
+		goBack() {
+			this.$router.go(-1)
+		},
+
+		goPayment() {
+			let addressId = this.$route.query.addressId
+
+			// 生成订单信息
+			axios
+				.post('/users/payment', {
+					addressId: addressId,
+					orderTotal: this.total,
+					subtotal: this.subtotal,
+					shipping: this.shipping,
+					discount: this.discount,
+					tax: this.tax,
+					isPay: '0'
+				})
+				.then(res => {
+					if (res.data.status === '0') {
+						this.$router.push({
+							path: '/orderPay',
+							query: {
+								orderId: res.data.result.orderId
+							}
+						})
+					}
+				})
+		}
 	}
 }
 </script>

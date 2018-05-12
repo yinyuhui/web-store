@@ -13,6 +13,7 @@ import AddProduct from '@/views/AddProduct'
 import ViewProductList from '@/views/ViewProductList'
 import EditProduct from '@/views/EditProduct'
 import OrderPay from '@/views/OrderPay'
+import Statistics from '@/views/Statistics'
 
 
 Vue.use(Router)
@@ -83,5 +84,10 @@ export default new Router({
         path: '/orderPay',
         name: 'OrderPay',
         component: OrderPay
+    }, {
+        // 数据统计    
+        path: '/statistics',
+        name: 'Statistics',
+        component: Statistics
     }]
 })

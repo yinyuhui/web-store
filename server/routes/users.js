@@ -3,6 +3,7 @@ require('./../util/util')
 var express = require('express');
 var router = express.Router();
 var User = require('./../models/user')
+var Goods = require('../models/goods')
     /* GET users listing. */
 router.get('/', function(req, res, next) {
     res.send('respond with a resource');
@@ -338,8 +339,35 @@ router.post('/payment', (req, res, next) => {
 
             // 获取用户购物车的购买商品
             doc.cartList.forEach((item) => {
+                // console.log(item)
                 if (item.checked === '1') {
                     goodsList.push(item)
+
+
+                    // 给Goods表里增加个下单的标志位
+                    Goods.findOne({
+                        productId: item.productId
+                    }, (err2, doc2) => {
+                        if (err2) {
+                            res.json({
+                                status: '1',
+                                msg: err.message,
+                                result: ''
+                            })
+                        } else {
+                            doc2.hasOrderNum = isNaN(doc2.hasOrderNum) ? 1 : ++doc2.hasOrderNum;
+
+                            doc2.save((err1, doc1) => {
+                                if (err2) {
+                                    res.json({
+                                        status: '1',
+                                        msg: err.message,
+                                        result: ''
+                                    })
+                                }
+                            })
+                        }
+                    })
                 }
             })
 
@@ -650,4 +678,5 @@ router.post('/isPay', (req, res, next) => {
         }
     })
 })
+
 module.exports = router;

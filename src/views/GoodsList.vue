@@ -425,7 +425,7 @@ export default {
 
 		// 进入商品详情页
 		goGoodDetail(productId) {
-			console.log(productId)
+			// console.log(productId)
 			this.$router.push({
 				path: '/goodDetail',
 				query: {

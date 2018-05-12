@@ -77,7 +77,9 @@ router.post('/list', function(req, res, next) {
                 $gt: priceGt,
                 $lte: priceLte
             },
-            productName: { $regex: reg },
+            productName: {
+                $regex: reg
+            },
             classify: classify
         }
     } else {
@@ -86,7 +88,9 @@ router.post('/list', function(req, res, next) {
                 $gt: priceGt,
                 $lte: priceLte
             },
-            productName: { $regex: reg }
+            productName: {
+                $regex: reg
+            }
         }
     }
 
@@ -347,6 +351,42 @@ router.post('/editProduct', (req, res, next) => {
             })
         }
     })
+})
+
+// 商品修改支付计数
+router.post('/setPayNum', (req, res, next) => {
+    let productId = req.body.productId
+    Goods.findOne({
+        productId: productId
+    }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message,
+                result: ''
+            })
+        } else {
+            doc.hasPayNum = isNaN(doc.hasPayNum) ? 1 : ++doc.hasPayNum;
+
+            doc.save((err1, doc1) => {
+                if (err1) {
+                    res.json({
+                        status: '1',
+                        msg: err.message,
+                        result: ''
+                    })
+                } else {
+                    res.json({
+                        status: '0',
+                        msg: '',
+                        result: 'success'
+                    })
+                }
+            })
+        }
+    })
+
 
 })
+
 module.exports = router;

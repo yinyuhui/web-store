@@ -11,6 +11,7 @@
             </el-submenu>
             <el-menu-item index="3">订单管理</el-menu-item>
             <el-menu-item index="4">地址管理</el-menu-item>
+            <el-menu-item index="5">数据统计</el-menu-item>
         </el-menu>
 
     </div>
@@ -47,6 +48,9 @@ export default {
 			}
 			if (key === '4') {
 				this.$router.push({ path: '/addressList' })
+			}
+			if (key === '5') {
+				this.$router.push({ path: '/statistics' })
 			}
         }
 	}
