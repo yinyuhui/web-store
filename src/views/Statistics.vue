@@ -129,8 +129,8 @@
 						<el-table-column prop="hasPayNum" label="支付笔数" width="160"  align="center"></el-table-column>
 						<el-table-column prop="isPay" label="转化率" width="160"  align="center">
 							<template slot-scope="scope">
-								<span v-if="isNaN(scope.row.hasPayNum)">0%</span>
-								<span v-else>{{scope.row.hasPayNum*100/scope.row.hasOrderNum}}%</span>
+								<span v-if="isNaN(scope.row.hasPayNum)">0.00 %</span>
+								<span v-else>{{scope.row.hasPayNum*100/scope.row.hasOrderNum | toFixed}} %</span>
 							</template>
 						</el-table-column>
 						<!-- <el-table-column label="操作">
@@ -186,6 +186,13 @@ export default {
 
 	mounted() {
 		this.init()
+	},
+
+	filters:{
+		toFixed:value=>{
+			value = Number(value)
+			return value.toFixed(2)
+		}
 	},
 
 	methods: {
