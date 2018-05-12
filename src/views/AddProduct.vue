@@ -50,7 +50,7 @@
 
 		<div class="product-form">
 			<el-card class="box-card">
-				<div slot="header" class="clearfix">
+				<div slot="header" class="clearfix fz16">
 					<span>新增商品</span>
 				</div>
 				<el-form :label-position="labelPosition" label-width="100px" :model="formData">

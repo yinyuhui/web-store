@@ -3,15 +3,25 @@
 	<div>
 		<el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
 			<el-menu-item index="1">首页</el-menu-item>
+
 			<el-submenu index="2" v-if="roleType==='admin'">
 				<template slot="title">商品管理</template>
 				<el-menu-item index="2-1">新增商品</el-menu-item>
 				<el-menu-item index="2-2">编辑商品</el-menu-item>
-
 			</el-submenu>
+
 			<el-menu-item index="3" v-if="roleType==='user'">订单管理</el-menu-item>
+
 			<el-menu-item index="4" v-if="roleType==='user'">地址管理</el-menu-item>
+
 			<el-menu-item index="5" v-if="roleType==='admin'">转化率</el-menu-item>
+			
+			<el-submenu index="6" v-if="roleType==='admin'">
+				<template slot="title">用户管理</template>
+				<el-menu-item index="6-1">新增用户</el-menu-item>
+				<el-menu-item index="6-2">编辑用户</el-menu-item>
+			</el-submenu>
+
 		</el-menu>
 
 	</div>
@@ -58,6 +68,12 @@ export default {
 			}
 			if (key === '5') {
 				this.$router.push({ path: '/statistics' })
+			}
+			if (key === '6-1') {
+				this.$router.push({ path: '/addUser' })
+			}
+			if (key === '6-2') {
+				this.$router.push({ path: '/userList' })
 			}
 		},
 

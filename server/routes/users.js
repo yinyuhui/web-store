@@ -688,4 +688,123 @@ router.post('/isPay', (req, res, next) => {
     })
 })
 
+// 新增用户
+router.post('/addUser', (req, res, next) => {
+    let obj = {
+        userName: req.body.userName,
+        userPwd: req.body.userPwd,
+        roleType: req.body.roleType,
+        userId: req.body.roleType + new Date().Format('yyyyMMddhhmmss')
+    }
+
+    User.create(obj, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                mag: err.message
+            })
+        } else {
+            res.json({
+                status: '0',
+                msg: '',
+                result: 'success'
+            })
+        }
+    })
+})
+
+// 得到所有用户信息
+router.get('/userList', function(req, res, next) {
+    User.find({}, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                mag: err.message
+            })
+        } else {
+            res.json({
+                status: '0',
+                msg: '',
+                result: doc
+            })
+        }
+    })
+})
+
+// 删除用户
+router.post('/userDel', (req, res, next) => {
+    let userId = req.body.userId
+    User.remove({
+        userId: userId
+    }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message,
+                result: ''
+            })
+        } else {
+            res.json({
+                status: '0',
+                msg: '',
+                result: 'success'
+            })
+        }
+    })
+})
+
+// 根据用户ID查找用户
+router.post('/userDetail', (req, res, next) => {
+    let userId = req.body.userId
+    User.findOne({
+        userId: userId
+    }, (err, doc) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message,
+                result: ''
+            })
+        } else {
+            res.json({
+                status: '0',
+                msg: '',
+                result: doc
+            })
+        }
+    })
+})
+
+// 编辑用户
+router.post('/editUser', (req, res, next) => {
+    let userId = req.body.userId,
+        userName = req.body.userName,
+        userPwd = req.body.userPwd,
+        roleType = req.body.roleType
+
+    User.update({
+        userId: userId
+    }, {
+        userId: userId,
+        userName: userName,
+        userPwd: userPwd,
+        roleType: roleType,
+    }, (err, num) => {
+        if (err) {
+            res.json({
+                status: '1',
+                msg: err.message,
+                result: ''
+            })
+        } else {
+            res.json({
+                status: '0',
+                msg: '',
+                result: num
+            })
+        }
+    })
+})
+
+
 module.exports = router;

@@ -14,6 +14,9 @@ import ViewProductList from '@/views/ViewProductList'
 import EditProduct from '@/views/EditProduct'
 import OrderPay from '@/views/OrderPay'
 import Statistics from '@/views/Statistics'
+import AddUser from '@/views/AddUser'
+import UserList from '@/views/UserList'
+import EditUser from '@/views/EditUser'
 
 
 Vue.use(Router)
@@ -89,5 +92,20 @@ export default new Router({
         path: '/statistics',
         name: 'Statistics',
         component: Statistics
+    }, {
+        // 新增用户   
+        path: '/addUser',
+        name: 'AddUser',
+        component: AddUser
+    }, {
+        // 用户列表 
+        path: '/userList',
+        name: 'UserList',
+        component: UserList
+    }, {
+        // 编辑用户信息 
+        path: '/editUser',
+        name: 'EditUser',
+        component: EditUser
     }]
 })
