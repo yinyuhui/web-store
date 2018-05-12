@@ -118,21 +118,21 @@
                 <div class="item-list-wrap">
                     
                     <el-table :data="orderList" stripe border style="width: 100%" center>
-                        <el-table-column type="index" width="80" label="序号">
+                        <el-table-column type="index" width="80" label="序号"  align="center">
                         </el-table-column>
-                        <el-table-column prop="createDate" label="创建时间">
+                        <el-table-column prop="createDate" label="创建时间"  align="center">
                         </el-table-column>
-                        <el-table-column prop="orderId" label="订单ID">
+                        <el-table-column prop="orderId" label="订单ID"  align="center">
                         </el-table-column>
-                        <el-table-column prop="goodsList.length" label="商品数量">
+                        <el-table-column prop="goodsList.length" label="商品数量"  align="center">
                         </el-table-column>
-                        <el-table-column prop="orderList.isPay" label="是否支付">
+                        <el-table-column prop="orderList.isPay" label="是否支付" align="center">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.isPay === '1'">已支付</span>
                                 <span v-else>未支付</span>
                             </template>
                         </el-table-column>
-                        <el-table-column label="操作">
+                        <el-table-column label="操作" align="center">
                             <template slot-scope="scope">
                                 <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteOrder(scope.row.orderId) "></el-button>
                             <el-button type="primary" icon="el-icon-view" size="mini" @click="goOrderDetail(scope.row.orderId) "></el-button>

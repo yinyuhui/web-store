@@ -11,7 +11,7 @@
             </el-submenu>
             <el-menu-item index="3">订单管理</el-menu-item>
             <el-menu-item index="4">地址管理</el-menu-item>
-            <el-menu-item index="5">数据统计</el-menu-item>
+            <el-menu-item index="5">转化率</el-menu-item>
         </el-menu>
 
     </div>
