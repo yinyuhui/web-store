@@ -67,6 +67,10 @@ router.post('/logout', (req, res, next) => {
         path: '/',
         maxAge: -1
     })
+    res.cookie('roleType', 'visitor', {
+        path: '/',
+        maxAge: -1
+    })
     res.json({
         status: '0',
         msg: '',

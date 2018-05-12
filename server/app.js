@@ -25,7 +25,7 @@ app.use((req, res, next) => {
     if (req.cookies.userId) {
         next()
     } else {
-        if (req.originalUrl === '/users/login' || req.originalUrl === '/users/logout' || req.path === '/goods/list') {
+        if (req.originalUrl === '/users/login' || req.originalUrl === '/users/logout' || req.path === '/goods/list' || req.path === '/goods/productDetail') {
             next()
         } else {
             res.json({

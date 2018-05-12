@@ -46,11 +46,12 @@
               <el-dropdown-item command="addProduct">新增商品</el-dropdown-item>
               <el-dropdown-item command="order">订单列表</el-dropdown-item>
               <el-dropdown-item command="address">地址管理</el-dropdown-item> -->
-              <el-dropdown-item command="logout" divided @click="logout">退出</el-dropdown-item>
+              <!-- <el-dropdown-item command="logout" divided @click="logout">退出</el-dropdown-item> -->
+              <el-dropdown-item command="logout" @click="logout">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
 
-          <el-badge :value="cartLength" class="item" v-if="name">
+          <el-badge :value="cartLength" class="item" v-if="roleType==='user'">
             <div class="navbar-cart-container">
               <span class="navbar-cart-count"></span>
               <a class="navbar-link navbar-cart-link" href="javascript:void(0)" @click="goCart">
@@ -93,9 +94,11 @@ export default {
 			dialogFormVisible: false,
 			errorTip: false,
 			name: '',
-			cartLength: 0
+			cartLength: 0,
+			roleType: 'visitor'
 		}
 	},
+
 	mounted() {
 		this.checkLogin()
 
@@ -107,6 +110,8 @@ export default {
 			})
 			// this.cartLength = res.data.result.length
 		})
+
+		this.roleType = this.getCookie('roleType')
 	},
 	methods: {
 		// 下拉菜单点击处理
@@ -173,6 +178,7 @@ export default {
 				if (res.data.status === '0') {
 					this.name = ''
 					this.$router.push('/')
+					location.reload()
 				}
 			})
 		},
@@ -202,6 +208,30 @@ export default {
 						this.errorTip = true
 					}
 				})
+
+				location.reload()
+		},
+
+		//我们定义一个函数，用来读取特定的cookie值。
+		getCookie(cookie_name) {
+			var allcookies = document.cookie
+			var cookie_pos = allcookies.indexOf(cookie_name)
+
+			// 如果找到了索引，就代表cookie存在，
+			// 反之，就说明不存在。
+			if (cookie_pos != -1) {
+				// 把cookie_pos放在值的开始，只要给值加1即可。
+				cookie_pos += cookie_name.length + 1
+				var cookie_end = allcookies.indexOf(';', cookie_pos)
+
+				if (cookie_end == -1) {
+					cookie_end = allcookies.length
+				}
+
+				var value = unescape(allcookies.substring(cookie_pos, cookie_end))
+			}
+
+			return value
 		}
 	}
 }

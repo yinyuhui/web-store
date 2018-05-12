@@ -68,8 +68,14 @@
 	left: 20px;
 }
 
-.pointer{
+.pointer {
 	cursor: pointer;
+}
+
+.disableAdd {
+	cursor: not-allowed;
+	pointer-events: none;
+	
 }
 </style>
 
@@ -99,7 +105,7 @@
 					<el-input placeholder="输入后回车搜索" prefix-icon="el-icon-search" v-model="params.name" size="small" @keyup.enter.native="searchName">
 					</el-input>
 
-					<a href="javascript:void(0)" class="default" :class="{'cur': defaultFlag}" @click="defaultSort">综合排序</a>
+					<a href="javascript:void(0)" class="default" :class="{'cur': defaultFlag}" @click="defaultSort">默认排序</a>
 					<a href="javascript:void(0)" class="price" :class="{'cur': !defaultFlag}" @click="sortGoods">
 						价格
 						<span v-if="sortFlag">↑</span>
@@ -133,7 +139,7 @@
 									<el-card :body-style="{ padding: '0px' }" shadow="hover">
 										<img v-lazy="'http://p04f9mqe1.bkt.clouddn.com/'+item.productImage" alt="" class="image" @click="goGoodDetail(item.productId)">
 										<div style="padding: 14px; border-top:1px solid #eee">
-											<a href="javascript:;" class="button" @click="addCart(item.productId)">
+											<a href="javascript:;" class="button" @click="addCart(item.productId)"  :class="{'disableAdd':roleType ==='admin'}" :disabled="{'disableAdd':roleType ==='admin'}">
 												<svg class="navbar-cart-logo">
 													<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart"></use>
 												</svg>
@@ -189,6 +195,7 @@ import NavFooter from './../components/Footer'
 import NavBread from './../components/Bread'
 import NavMenu from './../components/Menu'
 import axios from 'axios'
+// import { getCookie } from './../util/util'
 
 export default {
 	data() {
@@ -242,7 +249,8 @@ export default {
 			addSuc: false,
 			selectClassify: '全部分类',
 			classify: 'all',
-			name:''
+			name: '',
+			roleType: 'visitor'
 			// index:''
 		}
 	},
@@ -255,10 +263,35 @@ export default {
 	},
 
 	mounted() {
+		this.roleType = this.getCookie('roleType')
+		// this.roleType = setInterval(this.getCookie('roleType'),500)
+		// console.log(this.roleType)
 		this.getGoodsList()
 	},
 
 	methods: {
+		//我们定义一个函数，用来读取特定的cookie值。
+		getCookie(cookie_name) {
+			var allcookies = document.cookie
+			var cookie_pos = allcookies.indexOf(cookie_name)
+
+			// 如果找到了索引，就代表cookie存在，
+			// 反之，就说明不存在。
+			if (cookie_pos != -1) {
+				// 把cookie_pos放在值的开始，只要给值加1即可。
+				cookie_pos += cookie_name.length + 1
+				var cookie_end = allcookies.indexOf(';', cookie_pos)
+
+				if (cookie_end == -1) {
+					cookie_end = allcookies.length
+				}
+
+				var value = unescape(allcookies.substring(cookie_pos, cookie_end))
+			}
+
+			return value
+		},
+
 		// 商品分类标题赋值
 		setClassify(classify) {
 			switch (classify) {

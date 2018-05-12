@@ -18,6 +18,12 @@
 	font-family: 'akkurat', sans-serif;
 	font-size: 16px;
 }
+
+.el-table th {
+	background:#e4e4e4;
+	font-weight: 500;
+	color:#333
+}
 </style>
 
 <style scoped>
@@ -70,6 +76,8 @@
 .icons {
 	font-size: 1.5rem;
 }
+
+
 </style>
 
 <template>

@@ -85,6 +85,7 @@
 	width: 120px;
 	height: 120px;
 }
+
 </style>
 
 <template>
@@ -162,7 +163,7 @@
 										</div>
 									</el-col>
 								</el-row>
-
+								<br>
 								<div class="dashed-thread"></div>
 							</div>
 							<br>
