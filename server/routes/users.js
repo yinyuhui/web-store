@@ -18,8 +18,6 @@ router.post('/login', (req, res, next) => {
         userPwd: req.body.userPwd
     }
 
-    // console.log(param)
-
     // 查询
     User.findOne(param, (err, doc) => {
         if (err) {
@@ -37,13 +35,20 @@ router.post('/login', (req, res, next) => {
                     path: '/',
                     maxAge: 1000 * 60 * 60
                 })
+                res.cookie('roleType', doc.roleType, {
+                    path: '/',
+                    maxAge: 1000 * 60 * 60
+                })
 
-                // req.session.user = doc
                 res.json({
                     status: '0',
                     msg: '',
                     result: {
-                        userName: doc.userName
+                        userName: doc.userName,
+                        userId: doc.userId,
+                        roleType: doc.roleType,
+                        userId: doc.userId,
+                        role: doc.role
                     }
                 })
             } else {

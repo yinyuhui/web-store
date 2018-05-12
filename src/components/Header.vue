@@ -42,10 +42,10 @@
               <!-- <i class="el-icon-arrow-down el-icon--right"></i> -->
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="editProduct">商品管理</el-dropdown-item>
+              <!-- <el-dropdown-item command="editProduct">商品管理</el-dropdown-item>
               <el-dropdown-item command="addProduct">新增商品</el-dropdown-item>
               <el-dropdown-item command="order">订单列表</el-dropdown-item>
-              <el-dropdown-item command="address">地址管理</el-dropdown-item>
+              <el-dropdown-item command="address">地址管理</el-dropdown-item> -->
               <el-dropdown-item command="logout" divided @click="logout">退出</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
